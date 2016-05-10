@@ -44,12 +44,28 @@ Dt_i = [diag(-ones(S_num,1)) diag(ones(S_num,1)) zeros(S_num,5 + 2 * S_num)];
 Dt_j = [zeros(5, 2 * S_num) diag(ones(5,1)) zeros(5, 2 * S_num)];
 
 %%
+[hh_1, ww] = size(D);
+[hh_2, ww] = size(Dp);
+[hh_3, ww] = size(Dt_i);
+[hh_4, ww] = size(Dt_j);
+
+
 A = [D;Dp;Dt_i;Dt_j];
+b = [zeros(hh_1,1);zeros(hh_2,1);lambda*exp(T_tilde(1:S_num));lambda*exp(T_tilde(relay_idx))];
+f = zeros(ww,1);
 
+%% solve Ax = b, x >= 0
+% x = linprog(f,[],[],A,b,zeros(ww,1),[]); % equality constraint is strict? Cannot be satisfied
+% Instead, consider min. ||Ax - b||2, s.t. x>= 0
+% <=> min. (1/2)x'A'Ax - b'Ax, s.t. x >= 0
+H = A'* A;
+f = - A' * b;
+x = quadprog(H,f,[],[],[],[],zeros(ww,1),[]);
 
+gamma = x(1:S_num);
 
-f_obj_dual = t_tilde - lambda * (sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde(S_num+1:S_num+R_num)) .* z(S_num+1:S_num+R_num)) - T_frame)...
-        -  sum(gamma(1:S_num).*(t_tilde + P_tilde(1:S_num) + T_tilde(1:S_num) - log(T_frame * B(1:S_num))));
-fprintf('The dual solution f*(t_tilde) is %f\n',f_obj_dual);
+% f_obj_dual = t_tilde - lambda * (sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde(S_num+1:S_num+R_num)) .* z(S_num+1:S_num+R_num)) - T_frame)...
+%         -  sum(gamma(1:S_num).*(t_tilde + P_tilde(1:S_num) + T_tilde(1:S_num) - log(T_frame * B(1:S_num))));
+% fprintf('The dual solution f*(t_tilde) is %f\n',f_obj_dual);
 end
 

@@ -11,8 +11,8 @@ diff = 1;
 epoch = 1;
 
 %%
-while diff > threshold * 0.01
-    fprintf('Epoch %d, Tilde t is %f\n', epoch, t_tilde);
+while diff > threshold
+    fprintf('Epoch %d, Tilde t is %f, gamma_sum is %f\n', epoch, t_tilde, sum(gamma));
     tic;
     
     %% Solve the primal problem f^*(\tilde t) and get z
@@ -33,6 +33,9 @@ while diff > threshold * 0.01
 
     % By KKT
     gamma = getOptimalGamma_KKT( lambda, t_tilde, T_tilde, P_tilde, z, relay_idx );
+    
+    
+    
     
     t_tilde_old = t_tilde;
     t_tilde = t_tilde + theta * (1 - sum(gamma));

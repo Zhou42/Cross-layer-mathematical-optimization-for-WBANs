@@ -20,8 +20,8 @@ global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBo
 S_num = 17;
 R_num = 38;
 C_num = 1;
-theta = 1e-2;
-threshold = 1e-3;
+theta = 1e-3;
+threshold = 0.5e-4;
 % Battery level - relay has twice the energy of the sensor nodes
 B = ones(S_num,1); % J
 T_frame = 0.2; % s
@@ -110,7 +110,8 @@ r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num
 
 %% Parameters
 lambda = 0.5;
-t_tilde = 12.259086; 
+% t_tilde = 12.259086; 
+t_tilde = 12.26; 
 
 [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
 

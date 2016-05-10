@@ -28,15 +28,26 @@ D_vec_5 = log(P_min) - P_tilde(1:S_num);
 
 D = diag([D_vec_1; D_vec_2; D_vec_3; D_vec_4; D_vec_5]);
 %% Derivative of L over P
-Dp_temp(1:3) = log_sci(exp(1))/(log_sci(alpha_inBody(1:3,relayMapping(1))/N(relayMapping(1))) + P_tilde(1:3)*log_sci(exp(1)));
-Dp_temp(4:6) = log_sci(exp(1))/(log_sci(alpha_inBody(4:6,relayMapping(4))/N(relayMapping(4))) + P_tilde(4:6)*log_sci(exp(1)));
-Dp_temp(7:9) = log_sci(exp(1))/(log_sci(alpha_inBody(7:9,relayMapping(7))/N(relayMapping(7))) + P_tilde(7:9)*log_sci(exp(1)));
-Dp_temp(10:12) = log_sci(exp(1))/(log_sci(alpha_inBody(10:12,relayMapping(10))/N(relayMapping(10))) + P_tilde(10:12)*log_sci(exp(1)));
-Dp_temp(13:17) = log_sci(exp(1))/(log_sci(alpha_inBody(13:17,relayMapping(13))/N(relayMapping(13))) + P_tilde(13:17)*log_sci(exp(1)));
+Dp_temp(1:3) = log_sci(exp(1))./(log_sci(alpha_inBody(1:3,relayMapping(1))/N(relayMapping(1))) + P_tilde(1:3)*log_sci(exp(1)));
+Dp_temp(4:6) = log_sci(exp(1))./(log_sci(alpha_inBody(4:6,relayMapping(4))/N(relayMapping(4))) + P_tilde(4:6)*log_sci(exp(1)));
+Dp_temp(7:9) = log_sci(exp(1))./(log_sci(alpha_inBody(7:9,relayMapping(7))/N(relayMapping(7))) + P_tilde(7:9)*log_sci(exp(1)));
+Dp_temp(10:12) = log_sci(exp(1))./(log_sci(alpha_inBody(10:12,relayMapping(10))/N(relayMapping(10))) + P_tilde(10:12)*log_sci(exp(1)));
+Dp_temp(13:17) = log_sci(exp(1))./(log_sci(alpha_inBody(13:17,relayMapping(13))/N(relayMapping(13))) + P_tilde(13:17)*log_sci(exp(1)));
 
 
 
 Dp = [diag(-ones(S_num,1)) diag(Dp_temp) zeros(S_num,5) diag(-ones(S_num,1)) diag(ones(S_num,1))];
+%% Dt_i
+Dt_i = [diag(-ones(S_num,1)) diag(ones(S_num,1)) zeros(S_num,5 + 2 * S_num)];
+
+%% Dt_j
+Dt_j = [zeros(5, 2 * S_num) diag(ones(5,1)) zeros(5, 2 * S_num)];
+
+%%
+size(D);
+
+A = [D;Dp;Dt_i;Dt_j];
+b = []
 
 
 f_obj_dual = t_tilde - lambda * (sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde(S_num+1:S_num+R_num)) .* z(S_num+1:S_num+R_num)) - T_frame)...
