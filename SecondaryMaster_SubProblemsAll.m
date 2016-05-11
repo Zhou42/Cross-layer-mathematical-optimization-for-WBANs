@@ -1,4 +1,4 @@
-function [ P_tilde, T_tilde, relay_idx ] = SecondaryMaster_SubProblemsAll(lambda, t_tilde)
+function [ P_tilde, T_tilde, relay_idx, NO_SOLUTION_FLAG ] = SecondaryMaster_SubProblemsAll(lambda, t_tilde)
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
 % The inputs include \lambda, \tilde t
@@ -8,9 +8,10 @@ function [ P_tilde, T_tilde, relay_idx ] = SecondaryMaster_SubProblemsAll(lambda
 % A typical runtime is 5~6 seconds 
 
 global S_num R_num C_num B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay;
+NO_SOLUTION_FLAG = false;
 
 f_obj_subproblems = [];
-
+T_tilde = zeros(1,S_num+R_num);
 %% for Region 1, left arm
 relay_idx(1) = 18;
 obj_value = -inf;
@@ -34,6 +35,13 @@ for relay_idx_temp = 18:21
         T_tilde(relay_idx(1)) = T_tilde_temp(relay_idx(1));
     end
 end
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
 f_obj_subproblems(1) = - lambda * (sum(exp(T_tilde(1:3))) + exp(T_tilde(relay_idx(1))));
 % f_obj_subproblems(1) = - lambda * (sum(exp(T_tilde(1:3))) + exp(T_tilde(21)));
 %% for Region 2, right arm
@@ -59,6 +67,13 @@ for relay_idx_temp = 22:25
         T_tilde(relay_idx(2)) = T_tilde_temp(relay_idx(2));
     end
 end
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
 f_obj_subproblems(2) =  - lambda * (sum(exp(T_tilde(4:6))) + exp(T_tilde(relay_idx(2))));
 % f_obj_subproblems(2) =  - lambda * (sum(exp(T_tilde(4:6))) + exp(T_tilde(25)));
 %% for Region 3, left leg
@@ -84,6 +99,13 @@ for relay_idx_temp = 26:30
         T_tilde(relay_idx(3)) = T_tilde_temp(relay_idx(3));
     end
 end
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
 f_obj_subproblems(3) = - lambda * (sum(exp(T_tilde(7:9))) + exp(T_tilde(relay_idx(3))));
 % f_obj_subproblems(3) = - lambda * (sum(exp(T_tilde_temp(7:9))) + exp(T_tilde_temp(30)));
 %% for Region 4, right leg
@@ -109,6 +131,13 @@ for relay_idx_temp = 31:35
         T_tilde(relay_idx(4)) = T_tilde_temp(relay_idx(4));
     end
 end
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
 f_obj_subproblems(4) = - lambda * (sum(exp(T_tilde(10:12))) + exp(T_tilde(relay_idx(4))));
 % f_obj_subproblems(4) = - lambda * (sum(exp(T_tilde_temp(10:12))) + exp(T_tilde_temp(35)));
 %% for Region 5, body
@@ -138,8 +167,14 @@ end
 T_tilde = T_tilde';
 P_tilde = P_tilde';
 
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
 f_obj_subproblems(5) =  - lambda * (sum(exp(T_tilde(13:17))) + exp(T_tilde(relay_idx(5))));
-% f_obj_subproblems(5) =  - lambda * (sum(exp(T_tilde_temp(13:17))) + exp(T_tilde_temp(55)));
 
 f_obj = sum(f_obj_subproblems) + t_tilde + lambda * T_frame;
 fprintf('The primal solution f*(t_tilde) is %f\n',f_obj);

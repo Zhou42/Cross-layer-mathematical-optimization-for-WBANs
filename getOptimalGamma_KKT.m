@@ -60,7 +60,8 @@ f = zeros(ww,1);
 % <=> min. (1/2)x'A'Ax - b'Ax, s.t. x >= 0
 H = A'* A;
 f = - A' * b;
-x = quadprog(H,f,[],[],[],[],zeros(ww,1),[]);
+opts = optimset('Display','off');
+x = quadprog(H,f,[],[],[],[],zeros(ww,1),[],[],opts);
 
 gamma = x(1:S_num);
 

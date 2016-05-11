@@ -20,11 +20,11 @@ global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBo
 S_num = 17;
 R_num = 38;
 C_num = 1;
-theta = 1e-3;
-threshold = 0.5e-4;
+theta = 1e-2;
+threshold = 1e-4;
 % Battery level - relay has twice the energy of the sensor nodes
 B = ones(S_num,1); % J
-T_frame = 0.2; % s
+T_frame = 0.4; % s
 W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
@@ -108,36 +108,21 @@ x_s = 50000 * ones(S_num,1); % bit/s
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
 
-%% Parameters
-lambda = 0.5;
-% t_tilde = 12.259086; 
-t_tilde = 12.26; 
+%% Gradient 
+lambda = 0.1;
+% % t_tilde = 12.259086; 
+% % t_tilde = 12.269132; 
+% t_tilde = 12;
+lambda_old = 0;
+lambda_epoch = 1;
 
-[t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
-
-
-
-% for now consider the left arm, assume that the 19th relay is selected 
-%% convex optimization 
-% tic % timer
-% 
-% cvx_begin
-%     variables T_tilde(S_num + R_num,1) P_tilde(S_num + R_num,1);
-%     maximize( - lambda * (sum(exp(T_tilde(1:3))) + exp(T_tilde(19)))...
-%         -  sum(gamma(1:3).*(t_tilde + P_tilde(1:3) + T_tilde(1:3) - log(T_frame * B(1:3)))));
-%     subject to
-% %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-%         T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-%         log(r_relay(19) * exp(T_tilde(19))) >= log(sum(x_s(1:3)))
-%         log(P_min) <= P_tilde(1:S_num) <= log(P_max)
-% cvx_end
-% 
-% % 
-% toc
-
-% exp(T_tilde(1:3))
-% exp(T_tilde(19))
-% 
-% exp(P_tilde(1:3))
-
+while abs(lambda - lambda_old) > threshold
+    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
+    t_tilde = 0;
+    
+    lambda_old = lambda;
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
+    lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    lambda_epoch = lambda_epoch + 1;
+end
 
