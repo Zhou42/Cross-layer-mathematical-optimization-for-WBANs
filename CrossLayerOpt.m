@@ -16,7 +16,7 @@ clear all;
 close all;
 cvx_solver Mosek
 %% parameters
-global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay threshold;
+global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay threshold buf_length;
 S_num = 17;
 R_num = 38;
 C_num = 1;
@@ -113,16 +113,30 @@ lambda = 0.1;
 % % t_tilde = 12.259086; 
 % % t_tilde = 12.269132; 
 % t_tilde = 12;
-lambda_old = 0;
 lambda_epoch = 1;
 
-while abs(lambda - lambda_old) > threshold
+buf_length = 10;
+buf = zeros(buf_length,1);
+sum_old = 0;
+diff = 1;
+
+while diff > threshold
+    tic;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
-    t_tilde = 0;
-    
-    lambda_old = lambda;
+    % initial value for t_tilde
+    t_tilde = 10;
+    % Obtain t_tilde to update \lambda
     [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
     lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    
+    buf(mod(lambda_epoch,buf_length) + 1) = lambda;
+    %% Iteration ending criteria; calculate diff each (buf_length) iterations
+    if (mod(lambda_epoch, buf_length) == 1)
+        diff = abs(sum_old - sum(buf))/buf_length;
+        sum_old = sum(buf);
+    end
+    
     lambda_epoch = lambda_epoch + 1;
+    toc;
 end
 

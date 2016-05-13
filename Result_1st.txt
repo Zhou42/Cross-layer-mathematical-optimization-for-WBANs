@@ -1,0 +1,7 @@
+Lambda epoch 91, Lambda is 0.004973
+...
+The primal solution f*(t_tilde) is 12.952862
+Epoch 299, Tilde t is 12.962013, Tilde Avg is 12.918393, gamma_sum is 0.084914, diff is 0.098877
+Elapsed time is 1694.853451 seconds.
+Your MATLAB session has timed out.  All license keys have been returned.
+>> exp(P_tilde)

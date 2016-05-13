@@ -3,12 +3,12 @@ function [ t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar( t_tilde
 %   Detailed explanation goes here
 % input: t_tilde, lambda
 % output: t_tilde, z*, T_tilde*, P_tilde*
-global S_num R_num threshold B T_frame W N P_max P_min alpha_inBody x_s r_relay theta;
+global S_num R_num threshold B T_frame W N P_max P_min alpha_inBody x_s r_relay theta buf_length;
 gamma = ones(S_num,1); % inital gamma values
 
 diff = 1;
 epoch = 1;
-buf_length = 10;
+% buf_length = 10;
 buf = zeros(buf_length,1);
 sum_old = 0;
 
@@ -18,7 +18,7 @@ z = [];
 %%
 while diff > threshold
     fprintf('Epoch %d, Tilde t is %f, Tilde Avg is %f, gamma_sum is %f, diff is %f\n', epoch, t_tilde,sum(buf)/buf_length, sum(gamma), diff);
-    tic;
+   % tic;
     
     % A copy of the old values
     P_tilde_old = P_tilde;
@@ -67,7 +67,7 @@ while diff > threshold
     end
     
     epoch = epoch + 1;
-    toc;
+   % toc;
 end
 % P_tilde = P_tilde_d_gamma;
 % T_tilde = T_tilde_d_gamma;
