@@ -140,3 +140,14 @@ while diff > threshold
     toc;
 end
 
+
+%% Graph
+imshow(im);
+
+% hold on;
+% scatter(X(:,1),X(:,2));
+% set(gca,'ydir','reverse','xaxislocation','top');
+
+for i = 1:(S_num + R_num + 1)
+    text(X(i,1),X(i,2),num2str(i));
+end
