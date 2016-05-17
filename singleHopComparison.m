@@ -11,12 +11,17 @@ cvx_solver Mosek
 
 %% parameters
 S_num = 17;
+R_num = 38;
 B = ones(S_num,1); % J
 T_frame = 0.4; % s
 W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
 P_min = 10^(-28/10) / 1000;
+
+x_body = 415:57:590;
+y_body = 356:65:630;
+[x_grid, y_grid] = meshgrid(x_body, y_body);
 X = [
  73 364;
  154 338;
@@ -61,12 +66,14 @@ alpha_inBody = 10.^( - PL_inBody./10);
 x_s = 50000 * ones(S_num,1); % bit/s
 
 cvx_begin
-    variables T_tilde_temp(S_num,1) P_tilde_temp(S_num,1);
-    maximize( );
+    variables T_tilde(S_num,1) P_tilde(S_num,1) t_tilde;
+    maximize(t_tilde);
     subject to
-
-
-
+        t_tilde + T_tilde + P_tilde <= log(B * T_frame)
+        sum(exp(T_tilde)) <= T_frame
+        T_tilde + log(W * log_sci((alpha_inBody(1:S_num, 56).*exp(P_tilde))/N(56))) >= log(x_s)
+        % T_tilde + log(W * log_sci(1 + (alpha_inBody(1:S_num, 56).*exp(P_tilde))/N(56))) >= log(x_s)
+        log(P_min) <= P_tilde <= log(P_max)
 cvx_end
 
 
