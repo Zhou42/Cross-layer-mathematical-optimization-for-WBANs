@@ -21,8 +21,8 @@ switch region_idx
                 subject to
                     t_tilde + P_tilde(1:3) + T_tilde(1:3) <= log(T_frame * B(1:3))
             %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-                    T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx_temp).*exp(P_tilde(1:3)))/N(relay_idx_temp))) >= log(x_s(1:3))
-                    log(r_relay(relay_idx_temp) * exp(T_tilde(relay_idx_temp))) >= log(sum(x_s(1:3)))
+                    T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx_temp).*exp(P_tilde(1:3)))/N(relay_idx_temp))) >= log(x_s(1:3) * T_frame)
+                    log(r_relay(relay_idx_temp) * exp(T_tilde(relay_idx_temp))) >= log(sum(x_s(1:3) * T_frame))
                     log(P_min) <= P_tilde(1:3) <= log(P_max)
             cvx_end
             

@@ -71,7 +71,7 @@ cvx_begin
     subject to
         t_tilde + T_tilde + P_tilde <= log(B * T_frame)
         sum(exp(T_tilde)) <= T_frame
-        T_tilde + log(W * log_sci((alpha_inBody(1:S_num, 56).*exp(P_tilde))/N(56))) >= log(x_s)
+        T_tilde + log(W * log_sci((alpha_inBody(1:S_num, 56).*exp(P_tilde))/N(56))) >= log(x_s * T_frame)
         % T_tilde + log(W * log_sci(1 + (alpha_inBody(1:S_num, 56).*exp(P_tilde))/N(56))) >= log(x_s)
         log(P_min) <= P_tilde <= log(P_max)
 cvx_end

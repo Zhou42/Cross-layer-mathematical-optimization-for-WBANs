@@ -12,15 +12,15 @@ relayMapping = [relay_idx(1) * ones(3,1); relay_idx(2) * ones(3,1); relay_idx(3)
 %% Complementary slackness matrix
 D_vec_1 = t_tilde + P_tilde(1:S_num) + T_tilde(1:S_num) - log(T_frame * B(1:S_num));
 for i = 1:S_num
-    D_vec_2(i) = log(x_s(i)) - (T_tilde(i) + log(W * log_sci(alpha_inBody(i,relayMapping(i))*exp(P_tilde(i))/N(relayMapping(i)))));
+    D_vec_2(i) = log(x_s(i) * T_frame) - (T_tilde(i) + log(W * log_sci(alpha_inBody(i,relayMapping(i))*exp(P_tilde(i))/N(relayMapping(i)))));
 end
 D_vec_2 = D_vec_2';
 
-D_vec_3(1) = log(sum(x_s(1:3))) - log(W * log_sci(alpha_onBody(relayMapping(1),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(1))));
-D_vec_3(2) = log(sum(x_s(4:6))) - log(W * log_sci(alpha_onBody(relayMapping(4),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(4))));
-D_vec_3(3) = log(sum(x_s(7:9))) - log(W * log_sci(alpha_onBody(relayMapping(7),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(7))));
-D_vec_3(4) = log(sum(x_s(10:12))) - log(W * log_sci(alpha_onBody(relayMapping(10),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(10))));
-D_vec_3(5) = log(sum(x_s(13:17))) - log(W * log_sci(alpha_onBody(relayMapping(13),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(13))));
+D_vec_3(1) = log(sum(x_s(1:3) * T_frame)) - log(W * log_sci(alpha_onBody(relayMapping(1),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(1))));
+D_vec_3(2) = log(sum(x_s(4:6) * T_frame)) - log(W * log_sci(alpha_onBody(relayMapping(4),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(4))));
+D_vec_3(3) = log(sum(x_s(7:9) * T_frame)) - log(W * log_sci(alpha_onBody(relayMapping(7),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(7))));
+D_vec_3(4) = log(sum(x_s(10:12) * T_frame)) - log(W * log_sci(alpha_onBody(relayMapping(10),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(10))));
+D_vec_3(5) = log(sum(x_s(13:17) * T_frame)) - log(W * log_sci(alpha_onBody(relayMapping(13),S_num + R_num + 1)*P_max/N(56))* exp(T_tilde(relayMapping(13))));
 D_vec_3 = D_vec_3';
 
 D_vec_4 = P_tilde(1:S_num) - log(P_max);

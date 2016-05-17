@@ -22,8 +22,8 @@ for relay_idx_temp = 18:21
         subject to
             t_tilde + P_tilde_temp(1:3) + T_tilde_temp(1:3) <= log(T_frame * B(1:3))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx_temp).*exp(P_tilde_temp(1:3)))/N(relay_idx_temp))) >= log(x_s(1:3))
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(1:3)))
+            T_tilde_temp(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx_temp).*exp(P_tilde_temp(1:3)))/N(relay_idx_temp))) >= log(x_s(1:3) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(1:3) * T_frame))
             log(P_min) <= P_tilde_temp(1:3) <= log(P_max)
     cvx_end
     % there are 3 things need to be updated: sensor's P and T, relay's T
@@ -54,8 +54,8 @@ for relay_idx_temp = 22:25
         subject to
             t_tilde + P_tilde_temp(4:6) + T_tilde_temp(4:6) <= log(T_frame * B(4:6))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(4:6) + log(W * log_sci((alpha_inBody(4:6,relay_idx_temp).*exp(P_tilde_temp(4:6)))/N(relay_idx_temp))) >= log(x_s(4:6))
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(4:6)))
+            T_tilde_temp(4:6) + log(W * log_sci((alpha_inBody(4:6,relay_idx_temp).*exp(P_tilde_temp(4:6)))/N(relay_idx_temp))) >= log(x_s(4:6) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(4:6) * T_frame))
             log(P_min) <= P_tilde_temp(4:6) <= log(P_max)
     cvx_end
 
@@ -86,8 +86,8 @@ for relay_idx_temp = 26:30
         subject to
             t_tilde + P_tilde_temp(7:9) + T_tilde_temp(7:9) <= log(T_frame * B(7:9))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx_temp).*exp(P_tilde_temp(7:9)))/N(relay_idx_temp))) >= log(x_s(7:9))
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(7:9)))
+            T_tilde_temp(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx_temp).*exp(P_tilde_temp(7:9)))/N(relay_idx_temp))) >= log(x_s(7:9) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(7:9) * T_frame))
             log(P_min) <= P_tilde_temp(7:9) <= log(P_max)
     cvx_end
 
@@ -118,8 +118,8 @@ for relay_idx_temp = 31:35
         subject to
             t_tilde + P_tilde_temp(10:12) + T_tilde_temp(10:12) <= log(T_frame * B(10:12))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx_temp).*exp(P_tilde_temp(10:12)))/N(relay_idx_temp))) >= log(x_s(10:12))
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(10:12)))
+            T_tilde_temp(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx_temp).*exp(P_tilde_temp(10:12)))/N(relay_idx_temp))) >= log(x_s(10:12) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(10:12) * T_frame))
             log(P_min) <= P_tilde_temp(10:12) <= log(P_max)
     cvx_end
 
@@ -150,8 +150,8 @@ for relay_idx_temp = 36:55
         subject to
             t_tilde + P_tilde_temp(13:17) + T_tilde_temp(13:17) <= log(T_frame * B(13:17))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx_temp).*exp(P_tilde_temp(13:17)))/N(relay_idx_temp))) >= log(x_s(13:17))
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(13:17)))
+            T_tilde_temp(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx_temp).*exp(P_tilde_temp(13:17)))/N(relay_idx_temp))) >= log(x_s(13:17) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(13:17) * T_frame))
             log(P_min) <= P_tilde_temp(13:17) <= log(P_max)
     cvx_end
 

@@ -1,22 +1,13 @@
+%% Result comparison with relay locaiton control and without power control
+% [1] Energy efficiency optimization by resource allocation in wireless body area networks
 % 2016-05-04 by Yang Zhou
-% [1] Energy Efficiency Optimziation by Resource Allocation in Wireless Body Area Networks
-% Description: 
-% [2] Channel Models for Medical Implant Communication. 
-% Channel model - Table 1: Deep tissue implant to body surface
-%
-% According to the simulation result from topology part, we can conclude  
-% there are 17 sensor nodes, 38 relay Candidate Sites and 1 coordinator
-
-% Power unit in this file is: W
-% Time unit: second
-% So energy should be: J
+% There are only 17 implanted sensors, 5 relays and one coordinator in the WBSN. 
 
 clc;
 clear all;
 close all;
 cvx_solver Mosek
 %% parameters
-global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay threshold buf_length;
 S_num = 17;
 R_num = 38;
 C_num = 1;
@@ -30,7 +21,6 @@ N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is 
 P_max = 10^(0/10) / 1000; % W
 P_min = 10^(-28/10) / 1000;
 % coordinator
-im = imread('WBSNGraph.jpg');
 x_body = 415:57:590;
 y_body = 356:65:630;
 [x_grid, y_grid] = meshgrid(x_body, y_body);
@@ -61,18 +51,6 @@ X = [
  reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % - 20 nodes
  584 590
 ];
-
-%% Graph
-% imshow(im);
-% 
-% % hold on;
-% % scatter(X(:,1),X(:,2));
-% % set(gca,'ydir','reverse','xaxislocation','top');
-% 
-% for i = 1:(S_num + R_num + 1)
-%     text(X(i,1),X(i,2),num2str(i));
-% end
-
 
 % distance matrix; the image is 1022*1045 pixels
 % !! This distance matrix needs to be updated to 3D-distance version!!
@@ -108,47 +86,36 @@ x_s = 50000 * ones(S_num,1); % bit/s
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
 
-%% Gradient 
-% lambda = 0.1;
-lambda = 0.005;
-% % t_tilde = 12.259086; 
-% % t_tilde = 12.269132; 
-% t_tilde = 12;
-lambda_epoch = 1;
+%% z is known, the problem is convex 
 
-buf_length = 10;
-buf = zeros(buf_length,1);
-sum_old = 0;
-diff = 1;
-
-while diff > threshold
-    tic;
-    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
-    % initial value for t_tilde
-    t_tilde = 10;
-    % Obtain t_tilde to update \lambda
-    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
-    lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
-    
-    buf(mod(lambda_epoch,buf_length) + 1) = lambda;
-    %% Iteration ending criteria; calculate diff each (buf_length) iterations
-    if (mod(lambda_epoch, buf_length) == 1)
-        diff = abs(sum_old - sum(buf))/buf_length;
-        sum_old = sum(buf);
-    end
-    
-    lambda_epoch = lambda_epoch + 1;
-    toc;
-end
-
-
-%% Graph
-imshow(im);
-
-% hold on;
-% scatter(X(:,1),X(:,2));
-% set(gca,'ydir','reverse','xaxislocation','top');
-
-for i = 1:(S_num + R_num + 1)
-    text(X(i,1),X(i,2),num2str(i));
-end
+cvx_begin
+    variables T_tilde(S_num + R_num,1) P_tilde(S_num + R_num,1) t_tilde;
+    maximize(t_tilde);
+    subject to
+        t_tilde + P_tilde(1:S_num) + T_tilde(1:S_num) <= log(T_frame * B(1:S_num))
+        sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde(relay_idx))) <= T_frame
+        % left arm
+%         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
+        T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx(1)).*exp(P_tilde(1:3)))/N(relay_idx(1)))) >= log(x_s(1:3) * T_frame)
+        % right arm
+        T_tilde(4:6) + log(W * log_sci((alpha_inBody(4:6,relay_idx(2)).*exp(P_tilde(4:6)))/N(relay_idx(2)))) >= log(x_s(4:6) * T_frame)
+        % left leg
+        T_tilde(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx(3)).*exp(P_tilde(7:9)))/N(relay_idx(3)))) >= log(x_s(7:9) * T_frame)
+        % right leg
+        T_tilde(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx(4)).*exp(P_tilde(10:12)))/N(relay_idx(4)))) >= log(x_s(10:12) * T_frame)
+        % body
+        T_tilde(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx(5)).*exp(P_tilde(13:17)))/N(relay_idx(5)))) >= log(x_s(13:17) * T_frame)
+        
+        % Region 1
+        log(r_relay(relay_idx(1)) * exp(T_tilde(relay_idx(1)))) >= log(sum(x_s(1:3) * T_frame))
+        % Region 2
+        log(r_relay(relay_idx(2)) * exp(T_tilde(relay_idx(2)))) >= log(sum(x_s(4:6) * T_frame))
+        % Region 3
+        log(r_relay(relay_idx(3)) * exp(T_tilde(relay_idx(3)))) >= log(sum(x_s(7:9) * T_frame))
+        % Region 4
+        log(r_relay(relay_idx(4)) * exp(T_tilde(relay_idx(4)))) >= log(sum(x_s(10:12) * T_frame))
+        % Region 5
+        log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(x_s(13:17) * T_frame))
+        
+        log(P_min) <= P_tilde(1:S_num) <= log(P_max)
+cvx_end
