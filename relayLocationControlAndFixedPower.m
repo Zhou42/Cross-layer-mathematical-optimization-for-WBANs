@@ -20,6 +20,12 @@ W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
 P_min = 10^(-28/10) / 1000;
+
+%% fixed transmission power
+P = -15 * ones(S_num, 1); % dBmW
+P_W = 10.^(P/10) / 1000; % W
+P_tilde = log(P_W);
+
 % coordinator
 x_body = 415:57:590;
 y_body = 356:65:630;
@@ -67,7 +73,7 @@ for i = 1:S_num + R_num + 1
     PL_inBody(i, i) = 0;
 end
 alpha_inBody = 10.^( - PL_inBody./10);
-
+r_ij(1:S_num,(S_num + 1):(S_num + R_num)) = W * log_sci(1 + (alpha_inBody(1:S_num,(S_num + 1):(S_num + R_num)).*repmat(P_W,1,R_num))./repmat(N((S_num + 1):(S_num + R_num))',S_num,1));
 
 % On-body Pathloss model for relays; relay CS 18~55 to coordinator
 d_0_onBody = 0.1;
@@ -83,39 +89,50 @@ alpha_onBody = 10.^( - PL_onBody./10);
 x_s = 50000 * ones(S_num,1); % bit/s
 
 % data rate of relay to coordinator
-r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
+r_jc((S_num + 1):(S_num + R_num)) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
 
-%% z is known, the problem is convex 
+%% 
+
 
 cvx_begin
-    variables T_tilde(S_num + R_num,1) P_tilde(S_num + R_num,1) t_tilde;
+    variables T_tilde(S_num + R_num,1) t_tilde;
+    variable z(S_num + R_num, 1) binary;
     maximize(t_tilde);
     subject to
         t_tilde + P_tilde(1:S_num) + T_tilde(1:S_num) <= log(T_frame * B(1:S_num))
-        sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde(relay_idx))) <= T_frame
+        sum(exp(T_tilde(1:S_num))) + sum(exp(T_tilde((S_num + 1):(S_num + R_num))) .* z((S_num + 1):(S_num + R_num))) <= T_frame
         % left arm
 %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-        T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx(1)).*exp(P_tilde(1:3)))/N(relay_idx(1)))) >= log(x_s(1:3) * T_frame)
+        T_tilde(1:3) + log(r_ij(1:3, 18:21) * z(18:21)) >= log(x_s(1:3) * T_frame)
         % right arm
-        T_tilde(4:6) + log(W * log_sci((alpha_inBody(4:6,relay_idx(2)).*exp(P_tilde(4:6)))/N(relay_idx(2)))) >= log(x_s(4:6) * T_frame)
+        T_tilde(4:6) + log(r_ij(4:6, 22:25) * z(22:25)) >= log(x_s(4:6) * T_frame)
         % left leg
-        T_tilde(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx(3)).*exp(P_tilde(7:9)))/N(relay_idx(3)))) >= log(x_s(7:9) * T_frame)
+        T_tilde(7:9) + log(r_ij(7:9, 26:30) * z(26:30)) >= log(x_s(7:9) * T_frame)
         % right leg
-        T_tilde(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx(4)).*exp(P_tilde(10:12)))/N(relay_idx(4)))) >= log(x_s(10:12) * T_frame)
+        T_tilde(10:12) +  log(r_ij(10:12, 31:35) * z(31:35)) >= log(x_s(10:12) * T_frame)
         % body
-        T_tilde(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx(5)).*exp(P_tilde(13:17)))/N(relay_idx(5)))) >= log(x_s(13:17) * T_frame)
+        T_tilde(13:17) +  log(r_ij(13:17, 36:55) * z(36:55)) >= log(x_s(13:17) * T_frame)
         
         % Region 1
-        log(r_relay(relay_idx(1)) * exp(T_tilde(relay_idx(1)))) >= log(sum(x_s(1:3) * T_frame))
+        log(sum(r_jc(18:21).*exp(T_tilde(18:21)).*z(18:21))) >= log(sum(x_s(1:3) * T_frame))
         % Region 2
-        log(r_relay(relay_idx(2)) * exp(T_tilde(relay_idx(2)))) >= log(sum(x_s(4:6) * T_frame))
+        log(sum(r_jc(22:25).*exp(T_tilde(22:25)).*z(22:25))) >= log(sum(x_s(4:6) * T_frame))
         % Region 3
-        log(r_relay(relay_idx(3)) * exp(T_tilde(relay_idx(3)))) >= log(sum(x_s(7:9) * T_frame))
+        log(sum(r_jc(26:30).*exp(T_tilde(26:30)).*z(26:30))) >= log(sum(x_s(7:9) * T_frame))
         % Region 4
-        log(r_relay(relay_idx(4)) * exp(T_tilde(relay_idx(4)))) >= log(sum(x_s(10:12) * T_frame))
+        log(sum(r_jc(31:35).*exp(T_tilde(31:35)).*z(31:35))) >= log(sum(x_s(10:12) * T_frame))
         % Region 5
-        log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(x_s(13:17) * T_frame))
+        log(sum(r_jc(36:55).*exp(T_tilde(36:55)).*z(36:55))) >= log(sum(x_s(13:17) * T_frame))
         
-        log(P_min) <= P_tilde(1:S_num) <= log(P_max)
+        % Region 1
+        sum(z(18:21)) = 1;
+        % Region 2
+        sum(z(22:25)) = 1;
+        % Region 3
+        sum(z(26:30)) = 1;
+        % Region 4
+        sum(z(31:35)) = 1;
+        % Region 5
+        sum(z(36:55)) = 1;
 cvx_end
