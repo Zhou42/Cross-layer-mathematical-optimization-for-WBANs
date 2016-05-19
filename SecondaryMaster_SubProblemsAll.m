@@ -177,7 +177,7 @@ end
 f_obj_subproblems(5) =  - lambda * (sum(exp(T_tilde(13:17))) + exp(T_tilde(relay_idx(5))));
 
 f_obj = sum(f_obj_subproblems) + t_tilde + lambda * T_frame;
-fprintf('The primal solution f*(t_tilde) is %f\n',f_obj);
+fprintf('The primal solution f*(t_tilde, lambda) is %f\n',f_obj);
 
 end
 

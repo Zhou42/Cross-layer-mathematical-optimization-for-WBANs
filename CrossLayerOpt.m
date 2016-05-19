@@ -110,7 +110,7 @@ r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num
 
 %% Gradient 
 % lambda = 0.1;
-lambda = 0.02;
+lambda = 2.5;
 % % t_tilde = 12.259086; 
 % % t_tilde = 12.269132; 
 % t_tilde = 12;
@@ -125,7 +125,7 @@ while diff > threshold
     tic;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
     % initial value for t_tilde
-    t_tilde = 12;
+    t_tilde = 12.2423;
     % Obtain t_tilde to update \lambda
     [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
     lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
