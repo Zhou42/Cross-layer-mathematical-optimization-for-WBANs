@@ -80,7 +80,7 @@ end
 alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
-x_s = 50000 * ones(S_num,1); % bit/s
+x_s = 300000 * ones(S_num,1); % bit/s
 
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s

@@ -103,14 +103,14 @@ alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
 % x_s = 50000 * ones(S_num,1) * 2.5; % bit/s - 100 kb seems to be proper for lambda to converge to a positive number
-x_s = 300000 * ones(S_num,1);
+x_s = 175000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
 
 %% Gradient 
 % lambda = 0.1;
-lambda = 6.8;
+lambda = 0.011;
 % % t_tilde = 12.259086; 
 % % t_tilde = 12.269132; 
 % t_tilde = 12;
@@ -125,10 +125,10 @@ while diff > threshold
     tic;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
     % initial value for t_tilde
-    t_tilde = 11.7810;
+    t_tilde = 12.60;
     % Obtain t_tilde to update \lambda
     [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
-    lambda = lambda + 10 * theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
     % lambda = lambda + 0.001 * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
     lambda = max(lambda, 0);
     buf(mod(lambda_epoch,buf_length) + 1) = lambda;
