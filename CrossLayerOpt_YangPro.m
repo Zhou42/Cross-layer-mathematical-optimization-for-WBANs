@@ -24,7 +24,7 @@ theta = 1e-2;
 threshold = 1e-4;
 % Battery level - relay has twice the energy of the sensor nodes
 B = ones(S_num,1); % J
-T_frame = 0.4; % s
+T_frame = 1; % s
 W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
@@ -103,14 +103,14 @@ alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
 % x_s = 50000 * ones(S_num,1) * 2.5; % bit/s - 100 kb seems to be proper for lambda to converge to a positive number
-x_s = 175000 * ones(S_num,1);
+x_s = 150000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
 
 %% Gradient 
 % lambda = 0.1;
-lambda = 0.011;
+lambda = 0.001;
 % % t_tilde = 12.259086; 
 % % t_tilde = 12.269132; 
 % t_tilde = 12;
@@ -125,7 +125,7 @@ while diff > threshold
     tic;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
     % initial value for t_tilde
-    t_tilde = 12.60;
+    t_tilde = 12.77;
     % Obtain t_tilde to update \lambda
     [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
     lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);

@@ -1,4 +1,4 @@
-% 2016-05-04 by Yang Zhou
+% 2016-05-23 by Yang Zhou
 % [1] Energy Efficiency Optimziation by Resource Allocation in Wireless Body Area Networks
 % Description: 
 % [2] Channel Models for Medical Implant Communication. 
@@ -16,7 +16,7 @@ clear all;
 close all;
 cvx_solver Mosek
 %% parameters
-global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay threshold buf_length;
+global S_num R_num C_num theta B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s r_relay threshold;
 S_num = 17;
 R_num = 38;
 C_num = 1;
@@ -25,13 +25,13 @@ threshold = 1e-4;
 % Battery level - relay has twice the energy of the sensor nodes
 B = ones(S_num,1); % J
 % Check the influence!!
-T_frame = 0.8; % s
+T_frame = 0.4; % s
 W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
 P_min = 10^(-28/10) / 1000;
 % coordinator
-im = imread('WBSNGraph.jpg');
+% im = imread('../WBSNGraph.jpg');
 x_body = 415:57:590;
 y_body = 356:65:630;
 [x_grid, y_grid] = meshgrid(x_body, y_body);
@@ -108,49 +108,22 @@ x_s = 150000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
+%% Exhaustive search for the optimal solution of the PRIMAL Problem
 
-%% Gradient 
-% lambda = 0.1;
-lambda = 0.043;
-% % t_tilde = 12.259086; 
-% % t_tilde = 12.269132; 
-% t_tilde = 12;
-lambda_epoch = 1;
-
-buf_length = 10;
-buf = zeros(buf_length,1);
-sum_old = 0;
-diff = 1;
-
-while diff > threshold
-    tic;
-    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
-    % initial value for t_tilde
-    t_tilde = 12.77;
-    % Obtain t_tilde to update \lambda
-    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar(t_tilde, lambda);
-    lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
-    % lambda = lambda + 0.001 * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
-    lambda = max(lambda, 0);
-    buf(mod(lambda_epoch,buf_length) + 1) = lambda;
-    %% Iteration ending criteria; calculate diff each (buf_length) iterations
-    if (mod(lambda_epoch, buf_length) == 1)
-        diff = abs(sum_old - sum(buf))/buf_length;
-        sum_old = sum(buf);
-    end
+for i_1 = 18:21
+    for i_2 = 22:25
+        for i_3 = 26:30
+            for i_4 = 31:35
+                
     
-    lambda_epoch = lambda_epoch + 1;
-    toc;
-end
+                % z is known, the problem is convex 
+                relay_idx = [19 24 29 34 44];
+                % z = zeros(S_num + R_num, 1);
+                % z(relay_idx) = 1;
+
+                [t_tilde, P_tilde, T_tilde] = primalOptimalGivenZ(relay_idx);
+                fprintf('The optimal t_tilde is %f\n',t_tilde);
 
 
-%% Graph
-imshow(im);
 
-% hold on;
-% scatter(X(:,1),X(:,2));
-% set(gca,'ydir','reverse','xaxislocation','top');
 
-for i = 1:(S_num + R_num + 1)
-    text(X(i,1),X(i,2),num2str(i));
-end
