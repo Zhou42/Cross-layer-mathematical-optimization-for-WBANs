@@ -43,14 +43,23 @@ t_tilde.append(11.778000000000000)
 t_tilde_singleHop.append(np.NaN)
 t_tilde_fixedRelayLocation.append(9.71687)
 
+# t_tilde_primal_proposed
+t_tilde_primal_proposed = [13.230205953857350, 12.998422876820328, 12.848306893117577, 12.629063330593327, 12.499509846240947, 12.220629017778430, 11.780769551609602]
+
+
+
 
 plt.figure()
 # plt.figure(figsize=(8,4))
 # plt.semilogy(f, np.exp(t_tilde), label="The proposed network", color="red", linewidth=2)
-plt.semilogy(f, np.exp(t_tilde), label="The proposed network",color="red", linewidth=2)
+plt.semilogy(f, np.exp(t_tilde), label="The proposed network solved by decomposition",color="black", linewidth=1, marker='+', linestyle="--", fillstyle='none', markersize=8)
 # plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",marker='d',color="black", linewidth=2,ls="-")
-plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",color="green", linewidth=2)
-plt.semilogy(f, np.exp(t_tilde_fixedRelayLocation), label="The multi-hop network with \nfixed relay location",color="blue", linewidth=2)
+plt.semilogy(f, np.exp(t_tilde_primal_proposed), label="The proposed network solved directly",color="black", linewidth=1, marker='s', linestyle=":", fillstyle='none', markersize=8)
+
+plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",color="black", linewidth=1, marker='x', linestyle="-.", fillstyle='none', markersize=8)
+plt.semilogy(f, np.exp(t_tilde_fixedRelayLocation), label="The multi-hop network with \nfixed relay location",color="black", linewidth=1, marker='o', linestyle="-", fillstyle='none', markersize=8)
+
+
 
 plt.grid(True)
 # plt.plot(x, z, "b--", label="$cos(x^2)$")
@@ -58,6 +67,6 @@ plt.xlabel("Data rate/Kbps")
 plt.ylabel("Network lifetime/s")
 # plt.title("The influence of data rate")
 # plt.ylim(-1.2, 1.2)
-plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.78),ncol=1,fancybox=True,shadow=True)
-# plt.legend()
+# plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.78),ncol=1,fancybox=True,shadow=True)
+plt.legend(fancybox=True,shadow=True)
 plt.show()

@@ -104,7 +104,7 @@ alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
 % x_s = 50000 * ones(S_num,1) * 2.5; % bit/s - 100 kb seems to be proper for lambda to converge to a positive number
-x_s = 150000 * ones(S_num,1);
+x_s = 175000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num,56).*P_max)/N(56)); % bit/s
 
@@ -137,3 +137,4 @@ for i_1 = 18:21
 end
 toc
 
+save('Primal_Results_175kbps_400ms.mat');
