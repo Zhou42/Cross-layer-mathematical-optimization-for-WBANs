@@ -49,15 +49,15 @@ t_tilde_primal_proposed = [13.230205953857350, 12.998422876820328, 12.8483068931
 
 
 
-plt.figure()
-# plt.figure(figsize=(8,4))
+# plt.figure()
+plt.figure(figsize=(12,9))
 # plt.semilogy(f, np.exp(t_tilde), label="The proposed network", color="red", linewidth=2)
-plt.semilogy(f, np.exp(t_tilde), label="The proposed network solved by decomposition",color="black", linewidth=1, marker='+', linestyle="--", fillstyle='none', markersize=8)
+plt.semilogy(f, np.exp(t_tilde), label="Proposed network with decomposition method",color="black", marker='+', linestyle="--", fillstyle='none', markersize=10)
 # plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",marker='d',color="black", linewidth=2,ls="-")
-plt.semilogy(f, np.exp(t_tilde_primal_proposed), label="The proposed network solved directly",color="black", linewidth=1, marker='s', linestyle=":", fillstyle='none', markersize=8)
+plt.semilogy(f, np.exp(t_tilde_primal_proposed), label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none', markersize=10)
 
-plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",color="black", linewidth=1, marker='x', linestyle="-.", fillstyle='none', markersize=8)
-plt.semilogy(f, np.exp(t_tilde_fixedRelayLocation), label="The multi-hop network with \nfixed relay location",color="black", linewidth=1, marker='o', linestyle="-", fillstyle='none', markersize=8)
+plt.semilogy(f, np.exp(t_tilde_singleHop), label="Single-hop network",color="black", marker='x', linestyle="-.", fillstyle='none', markersize=10)
+plt.semilogy(f, np.exp(t_tilde_fixedRelayLocation), label="Multi-hop network with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none', markersize=10)
 
 
 
