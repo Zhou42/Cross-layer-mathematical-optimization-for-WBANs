@@ -41,27 +41,27 @@ t_tilde_primal_proposed = [12.848306893117577, 12.848306893117577, 12.8483068931
 
 
 # Figure plot
-# plt.figure()
-plt.figure(figsize=(12,9))
+plt.figure()
+# plt.figure(figsize=(12,9))
 '''
 plt.semilogy(t, np.exp(t_tilde), label="The proposed network",color="red", linewidth=2)
 plt.semilogy(t, np.exp(t_tilde_singleHop), label="The single-hop network",color="green", linewidth=2)
 plt.semilogy(t, np.exp(t_tilde_fixedRelayLocation), label="The multi-hop network with \nfixed relay location",color="blue", linewidth=2)
 '''
 
-plt.semilogy(t, np.exp(t_tilde), label="Proposed network with decomposition method",color="black", marker='+', linestyle="--", fillstyle='none', markersize=10)
+plt.semilogy(t, np.exp(t_tilde), label="Proposed network with decomposition method",color="black", marker='+', linestyle="--", fillstyle='none')
 # plt.semilogy(f, np.exp(t_tilde_singleHop), label="The single-hop network",marker='d',color="black", linewidth=2,ls="-")
-plt.semilogy(t, np.exp(t_tilde_primal_proposed), label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none', markersize=10)
+plt.semilogy(t, np.exp(t_tilde_primal_proposed), label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none')
 
-plt.semilogy(t, np.exp(t_tilde_singleHop), label="Single-hop network",color="black", marker='x', linestyle="-.", fillstyle='none', markersize=10)
-plt.semilogy(t, np.exp(t_tilde_fixedRelayLocation), label="Multi-hop network with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none', markersize=10)
+plt.semilogy(t, np.exp(t_tilde_singleHop), label="Single-hop network",color="black", marker='x', linestyle="-.", fillstyle='none')
+plt.semilogy(t, np.exp(t_tilde_fixedRelayLocation), label="Multi-hop network with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
 
-plt.grid(True)
+# plt.grid(True)
 # plt.plot(x, z, "b--", label="$cos(x^2)$")
 plt.xlabel("Superframe length/ms")
 plt.ylabel("Network lifetime/s")
 # plt.title("The influence of data rate")
 # plt.ylim(-1.2, 1.2)
-plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.83),ncol=1,fancybox=True,shadow=True)
+plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.83),ncol=1,fancybox=True,shadow=True, prop={'size':10})
 # plt.legend()
 plt.show()
