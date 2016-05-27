@@ -13,7 +13,7 @@ cvx_solver Mosek
 S_num = 17;
 R_num = 38;
 B = ones(S_num,1); % J
-T_frame = 1; % s
+T_frame = 0.4; % s
 W = 3e6; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
@@ -63,7 +63,7 @@ end
 alpha_inBody = 10.^( - PL_inBody./10);
 
 % x_s - 50kbps for each node
-x_s = 150000 * ones(S_num,1); % bit/s
+x_s = 200000 * ones(S_num,1); % bit/s
 
 cvx_begin
     variables T_tilde(S_num,1) P_tilde(S_num,1) t_tilde;
@@ -76,5 +76,5 @@ cvx_begin
         log(P_min) <= P_tilde <= log(P_max)
 cvx_end
 
-
+save('./DualityGap/SingleHop_Results_200kbps_400ms.mat');
 
