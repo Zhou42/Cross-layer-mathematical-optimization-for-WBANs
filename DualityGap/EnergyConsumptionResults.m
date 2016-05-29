@@ -37,6 +37,12 @@ P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(1) = sum(P .* T);
 
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_100kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(1) = sum(P .* T);
+
 %% For 125 kbps 400ms
 load('../Results_125kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -62,6 +68,12 @@ P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(2) = sum(P .* T);
 
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_125kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(2) = sum(P .* T);
+
 %% For 150 kbps 400ms
 load('../Results_150kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -84,6 +96,13 @@ load('Multihop_FixedRelayLocation_Results_150kbps_400ms.mat','T_tilde','P_tilde'
 P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(3) = sum(P .* T);
+
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_150kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(3) = sum(P .* T);
+
 %% For 175 kbps 400ms
 load('../Results_175kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -106,6 +125,13 @@ load('Multihop_FixedRelayLocation_Results_175kbps_400ms.mat','T_tilde','P_tilde'
 P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(4) = sum(P .* T);
+
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_175kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(4) = sum(P .* T);
+
 %% For 200 kbps 400ms
 load('../Results_200kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -125,6 +151,13 @@ load('Multihop_FixedRelayLocation_Results_200kbps_400ms.mat','T_tilde','P_tilde'
 P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(5) = sum(P .* T);
+
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_200kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(5) = sum(P .* T);
+
 %% For 250 kbps 400ms
 load('../Results_250kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -143,6 +176,12 @@ load('Multihop_FixedRelayLocation_Results_250kbps_400ms.mat','T_tilde','P_tilde'
 P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(6) = sum(P .* T);
+
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_250kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(6) = sum(P .* T);
 %% For 300 kbps 400ms
 load('../Results_300kbps.mat','T_tilde','P_tilde','t_tilde');
 P = exp(P_tilde(1:S_num));
@@ -163,8 +202,13 @@ P = exp(P_tilde(1:S_num));
 T = exp(T_tilde(1:S_num));
 energyConsumption_Multihop_FixedRelayLocation(7) = sum(P .* T);
 
+% Multihop FixedPower
+load('../relayLocationControlAndFixedPower_Results_300kbps_400ms.mat','T_tilde_opt','P_tilde_opt','t_tilde_opt');
+P = exp(P_tilde_opt(1:S_num));
+T = exp(T_tilde_opt(1:S_num));
+energyConsumption_Multihop_FixedPower(7) = sum(P .* T);
 %% Plot
-plot(f, energyConsumption_proposed_decomposition, f, energyConsumption_centralized, f, energyConsumption_SingleHop, f, energyConsumption_Multihop_FixedRelayLocation);
-legend('Proposed network with decomposition method','Proposed network with centralized method','Single-hop network','Multi-hop network with fixed relay location');
+plot(f, energyConsumption_proposed_decomposition, f, energyConsumption_centralized, f, energyConsumption_SingleHop, f, energyConsumption_Multihop_FixedRelayLocation, f, energyConsumption_Multihop_FixedPower);
+legend('Proposed network with decomposition method','Proposed network with centralized method','Single-hop network','Multi-hop network with fixed relay location','Multi-hop network with fixed transmission power');
 
-save('EnergyResults','energyConsumption_proposed_decomposition','energyConsumption_centralized','energyConsumption_SingleHop','energyConsumption_Multihop_FixedRelayLocation');
+save('EnergyResults','energyConsumption_proposed_decomposition','energyConsumption_centralized','energyConsumption_SingleHop','energyConsumption_Multihop_FixedRelayLocation','energyConsumption_Multihop_FixedPower');

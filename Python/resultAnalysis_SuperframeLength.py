@@ -37,7 +37,7 @@ t_tilde_fixedRelayLocation.append(10.4124)
 
 # t_tilde_primal_proposed
 t_tilde_primal_proposed = [12.848306893117577, 12.848306893117577, 12.848306893117577, 12.848306893117577, 12.848306893117577]
-
+t_tilde_fixedPower = 12.284779402740310 * np.ones(5)
 
 
 # Figure plot
@@ -54,7 +54,10 @@ plt.semilogy(t, np.exp(t_tilde), label="Proposed network with decomposition meth
 plt.semilogy(t, np.exp(t_tilde_primal_proposed), label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none')
 
 plt.semilogy(t, np.exp(t_tilde_singleHop), label="Single-hop network",color="black", marker='x', linestyle="-.", fillstyle='none')
-plt.semilogy(t, np.exp(t_tilde_fixedRelayLocation), label="Multi-hop network with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
+plt.semilogy(t, np.exp(t_tilde_fixedRelayLocation), label="Multi-hop with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
+
+plt.semilogy(t, np.exp(t_tilde_fixedPower), label="Multi-hop with fixed transmission power",color="black", marker='d', linestyle="-", fillstyle='none')
+
 
 # plt.grid(True)
 # plt.plot(x, z, "b--", label="$cos(x^2)$")
@@ -62,6 +65,6 @@ plt.xlabel("Superframe length/ms")
 plt.ylabel("Network lifetime/s")
 # plt.title("The influence of data rate")
 # plt.ylim(-1.2, 1.2)
-plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.83),ncol=1,fancybox=True,shadow=True, prop={'size':10})
+plt.legend(loc='upper center', bbox_to_anchor=(0.65,0.77),ncol=1,fancybox=True,shadow=True, prop={'size':10})
 # plt.legend()
 plt.show()
