@@ -23,9 +23,12 @@ relay = [ones(3,1) * relay_idx(1);
 map = [[1:S_num]' relay];
 
 %% show image
-im = imread('../WBSNGraph.jpg');
+im = imread('../WBSNGraph_result0.jpg');
 imshow(im);
 
+%% offset adjustment
+offset  = [626 192] - X(13,:);
+X = X + repmat(offset, S_num + R_num + 1, 1);
 
 % for i = 1:(S_num + R_num + 1)
 %     text(X(i,1),X(i,2),num2str(i));
@@ -43,13 +46,13 @@ imshow(im);
 %% plot sensor to relays
 for i = 1:S_num
     hold on;
-    plot([X(i,1) X(map(i, 2),1)], [X(i,2) X(map(i, 2),2)], 'Linewidth',r(i) * 5/1e7,'color','r');
+    plot([X(i,1) X(map(i, 2),1)], [X(i,2) X(map(i, 2),2)], 'Linewidth',r(i) * 4/1e7,'color','k');
 end
 
 %% plot relay to coordinator
 for i = 1:numel(relay_idx)
     hold on;
-    plot([X(relay_idx(i),1) X(S_num + R_num + 1,1)], [X(relay_idx(i),2) X(S_num + R_num + 1,2)], 'Linewidth',r(i) * 5/1e7,'color','b', 'Linestyle','--');
+    plot([X(relay_idx(i),1) X(S_num + R_num + 1,1)], [X(relay_idx(i),2) X(S_num + R_num + 1,2)], 'Linewidth',r(i) * 4/1e7,'color','k');
     r_relay
 end
 
