@@ -35,6 +35,7 @@ while diff > threshold
         T_tilde = T_tilde_old;
         t_tilde = t_tilde_old;
         z = z_old;
+        fprintf('NO_SOLUTION_FLAG = true!');
         return
     end
     

@@ -21,8 +21,10 @@ cvx_begin quiet
         T_tilde(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx(3)).*exp(P_tilde(7:9)))/N(relay_idx(3)))) >= log(x_s(7:9) * T_frame)
         % right leg
         T_tilde(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx(4)).*exp(P_tilde(10:12)))/N(relay_idx(4)))) >= log(x_s(10:12) * T_frame)
-        % body
-        T_tilde(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx(5)).*exp(P_tilde(13:17)))/N(relay_idx(5)))) >= log(x_s(13:17) * T_frame)
+        % head
+        T_tilde(13) + log(W * log_sci((alpha_inBody(13,relay_idx(5)).*exp(P_tilde(13)))/N(relay_idx(5)))) >= log(x_s(13) * T_frame)
+        % torso
+        T_tilde(14:17) + log(W * log_sci((alpha_inBody(14:17,relay_idx(6)).*exp(P_tilde(14:17)))/N(relay_idx(6)))) >= log(x_s(14:17) * T_frame)
         
         % Region 1
         log(r_relay(relay_idx(1)) * exp(T_tilde(relay_idx(1)))) >= log(sum(x_s(1:3) * T_frame))
@@ -33,7 +35,9 @@ cvx_begin quiet
         % Region 4
         log(r_relay(relay_idx(4)) * exp(T_tilde(relay_idx(4)))) >= log(sum(x_s(10:12) * T_frame))
         % Region 5
-        log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(x_s(13:17) * T_frame))
+        log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(x_s(13) * T_frame))
+        % Region 6
+        log(r_relay(relay_idx(6)) * exp(T_tilde(relay_idx(6)))) >= log(sum(x_s(14:17) * T_frame))
         
         log(P_min) <= P_tilde(1:S_num) <= log(P_max)
 cvx_end

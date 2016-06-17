@@ -63,7 +63,14 @@ end
 alpha_inBody = 10.^( - PL_inBody./10);
 
 % x_s - 50kbps for each node
-x_s = 200000 * ones(S_num,1); % bit/s
+x_s = 100000 * ones(S_num,1); % bit/s
+
+%% Customized parameters
+% W = 3e5; % Hz
+% x_s = 10000 * ones(S_num,1);
+% P_min = 10^(-15/10) / 1000;
+% P_max = 10^(0/10) / 1000;
+
 
 cvx_begin
     variables T_tilde(S_num,1) P_tilde(S_num,1) t_tilde;

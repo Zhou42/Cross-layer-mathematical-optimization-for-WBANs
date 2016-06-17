@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import scipy.io as scio
 
-dataFile = '../Results_150kbps.mat'
+dataFile = '../Results_40kbps_400ms_binarysearch_decomposition.mat'
 data = scio.loadmat(dataFile)
 S_num = 17
 
@@ -18,6 +18,7 @@ for i in range(len(lifetime)):
 
 # plots
 plt.figure()
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
 plt.bar(range(1, S_num + 1), lifetime_vector, fill=False)
 plt.xlabel("Sensor index")
 plt.ylabel("Lifetime/s")

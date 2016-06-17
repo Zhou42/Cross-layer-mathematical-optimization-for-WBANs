@@ -11,7 +11,9 @@ global S_num R_num C_num B T_frame W N P_max P_min alpha_inBody alpha_onBody x_s
 NO_SOLUTION_FLAG = false;
 
 f_obj_subproblems = [];
-T_tilde = zeros(1,S_num+R_num);
+T_tilde = zeros(S_num+R_num, 1);
+P_tilde = zeros(S_num, 1);
+relay_idx = [];
 %% for Region 1, left arm
 relay_idx(1) = 18;
 obj_value = -inf;
@@ -140,26 +142,26 @@ end
 
 f_obj_subproblems(4) = - lambda * (sum(exp(T_tilde(10:12))) + exp(T_tilde(relay_idx(4))));
 % f_obj_subproblems(4) = - lambda * (sum(exp(T_tilde_temp(10:12))) + exp(T_tilde_temp(35)));
-%% for Region 5, body
+%% for Region 5, head
 relay_idx(5) = 36;
 obj_value = -inf;
-for relay_idx_temp = 36:55
+for relay_idx_temp = 36:37
     cvx_begin quiet
         variables T_tilde_temp(S_num + R_num,1) P_tilde_temp(S_num + R_num,1);
-        maximize( - lambda * (sum(exp(T_tilde_temp(13:17))) + exp(T_tilde_temp(relay_idx_temp))));
+        maximize( - lambda * (sum(exp(T_tilde_temp(13))) + exp(T_tilde_temp(relay_idx_temp))));
         subject to
-            t_tilde + P_tilde_temp(13:17) + T_tilde_temp(13:17) <= log(T_frame * B(13:17))
+            t_tilde + P_tilde_temp(13) + T_tilde_temp(13) <= log(T_frame * B(13))
     %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
-            T_tilde_temp(13:17) + log(W * log_sci((alpha_inBody(13:17,relay_idx_temp).*exp(P_tilde_temp(13:17)))/N(relay_idx_temp))) >= log(x_s(13:17) * T_frame)
-            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(13:17) * T_frame))
-            log(P_min) <= P_tilde_temp(13:17) <= log(P_max)
+            T_tilde_temp(13) + log(W * log_sci((alpha_inBody(13,relay_idx_temp).*exp(P_tilde_temp(13)))/N(relay_idx_temp))) >= log(x_s(13) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(13) * T_frame))
+            log(P_min) <= P_tilde_temp(13) <= log(P_max)
     cvx_end
 
-    if obj_value < (- lambda * (sum(exp(T_tilde_temp(13:17))) + exp(T_tilde_temp(relay_idx_temp))))
+    if obj_value < (- lambda * (sum(exp(T_tilde_temp(13))) + exp(T_tilde_temp(relay_idx_temp))))
         relay_idx(5) = relay_idx_temp;
-        obj_value = (- lambda * (sum(exp(T_tilde_temp(13:17))) + exp(T_tilde_temp(relay_idx_temp))));
-        T_tilde(13:17) = T_tilde_temp(13:17);
-        P_tilde(13:17) = P_tilde_temp(13:17);
+        obj_value = (- lambda * (sum(exp(T_tilde_temp(13))) + exp(T_tilde_temp(relay_idx_temp))));
+        T_tilde(13) = T_tilde_temp(13);
+        P_tilde(13) = P_tilde_temp(13);
         T_tilde(relay_idx(5)) = T_tilde_temp(relay_idx(5));
     end
 end
@@ -174,10 +176,48 @@ if obj_value == -inf
     return
 end
 
-f_obj_subproblems(5) =  - lambda * (sum(exp(T_tilde(13:17))) + exp(T_tilde(relay_idx(5))));
+f_obj_subproblems(5) =  - lambda * (sum(exp(T_tilde(13))) + exp(T_tilde(relay_idx(5))));
 
+
+%% for Region 6, torso
+relay_idx(6) = 38;
+obj_value = -inf;
+for relay_idx_temp = 38:57
+    cvx_begin quiet
+        variables T_tilde_temp(S_num + R_num,1) P_tilde_temp(S_num + R_num,1);
+        maximize( - lambda * (sum(exp(T_tilde_temp(14:17))) + exp(T_tilde_temp(relay_idx_temp))));
+        subject to
+            t_tilde + P_tilde_temp(14:17) + T_tilde_temp(14:17) <= log(T_frame * B(14:17))
+    %         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
+            T_tilde_temp(14:17) + log(W * log_sci((alpha_inBody(14:17,relay_idx_temp).*exp(P_tilde_temp(14:17)))/N(relay_idx_temp))) >= log(x_s(14:17) * T_frame)
+            log(r_relay(relay_idx_temp) * exp(T_tilde_temp(relay_idx_temp))) >= log(sum(x_s(14:17) * T_frame))
+            log(P_min) <= P_tilde_temp(14:17) <= log(P_max)
+    cvx_end
+
+    if obj_value < (- lambda * (sum(exp(T_tilde_temp(14:17))) + exp(T_tilde_temp(relay_idx_temp))))
+        relay_idx(6) = relay_idx_temp;
+        obj_value = (- lambda * (sum(exp(T_tilde_temp(14:17))) + exp(T_tilde_temp(relay_idx_temp))));
+        T_tilde(14:17) = T_tilde_temp(14:17);
+        P_tilde(14:17) = P_tilde_temp(14:17);
+        T_tilde(relay_idx(6)) = T_tilde_temp(relay_idx(6));
+    end
+end
+
+T_tilde = T_tilde';
+P_tilde = P_tilde';
+
+% check if all solution T_tilde_temp and P_tilde_temp are NaN, that is  no solution for
+% this subproblem
+if obj_value == -inf
+    NO_SOLUTION_FLAG = true;
+    return
+end
+
+f_obj_subproblems(6) =  - lambda * (sum(exp(T_tilde(14:17))) + exp(T_tilde(relay_idx(6))));
+
+%%
 f_obj = sum(f_obj_subproblems) + t_tilde + lambda * T_frame;
-fprintf('The primal solution f*(t_tilde, lambda) is %f\n',f_obj);
+% fprintf('The primal solution f*(t_tilde, lambda) is %f\n',f_obj);
 
 end
 
