@@ -32,7 +32,7 @@ N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is 
 P_max = 10^(0/10) / 1000; % W
 % For test
 P_min = 10^(-15/10) / 1000;
-% P_min = 10^(-28/10) / 1000;n 
+% P_min = 10^(-28/10) / 1000;
 
 % coordinate
 % im = imread('WBSNGraph.jpg');
@@ -125,6 +125,10 @@ r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num
 % Three sensor removed: sensor 1, 4 and 7
 % Four sensor removed: sensor 1, 4, 7 and 10
 % Five sensor removed: sensor 1, 4, 7, 10 and 15
+% Six sensor removed: sensor 1, 4, 7, 10, 15 and 17
+% Seven sensor removed: sensor 1, 4, 7, 10, 15, 17 and 9
+% Eight sensor removed: sensor 1, 4, 7, 10, 15, 17, 9 and 12
+% Nine sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12 and 3
 sensor_flag = ones(17,1);
 % one sensor removed
 sensor_flag(1) = 0;
@@ -132,6 +136,13 @@ sensor_flag(4) = 0;
 sensor_flag(7) = 0;
 sensor_flag(10) = 0;
 sensor_flag(15) = 0;
+sensor_flag(17) = 0;
+sensor_flag(9) = 0;
+sensor_flag(12) = 0;
+sensor_flag(3) = 0;
+
+% sensor_idx = find(sensor_flag == 1);
+
 %% Exhaustive search for the optimal solution of the PRIMAL Problem
 t_tilde_opt = -inf;
 Round = 1;
@@ -163,4 +174,4 @@ for i_1 = 18:21
 end
 toc
 
-save('Primal_Results_40kbps_400ms_12sensors.mat');
+save('Primal_Results_40kbps_400ms_8sensors.mat');
