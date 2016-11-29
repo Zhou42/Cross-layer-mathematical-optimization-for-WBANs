@@ -98,8 +98,8 @@ lifetime_FixedRelayLocation = [
 
 # plot the graph
 plt.figure()
-plt.semilogy(numOfSensors, np.exp(lifetime_BinarySearch), label="Proposed network with decomposition method",color="black", marker='+', linestyle="--", fillstyle='none')
-plt.semilogy(numOfSensors, np.exp(lifetime_Centralized), label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none')
+plt.semilogy(numOfSensors, np.exp(lifetime_BinarySearch), label="Proposed network with decomposition solution",color="black", marker='+', linestyle="--", fillstyle='none')
+plt.semilogy(numOfSensors, np.exp(lifetime_Centralized), label="Proposed network with centralized solution",color="black", marker='s', linestyle=":", fillstyle='none')
 
 plt.semilogy(numOfSensors, np.exp(lifetime_FixedPower), label="Multi-hop with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
 plt.semilogy(numOfSensors, np.exp(lifetime_FixedRelayLocation), label="Multi-hop with fixed transmission power",color="black", marker='d', linestyle="-", fillstyle='none')

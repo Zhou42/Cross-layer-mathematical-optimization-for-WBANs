@@ -35,7 +35,7 @@ plt.text(mid, -0.8, r'$\tilde t_{Mid}$')
 plt.text(TH, -0.8, r'$\tilde t_{TH}$')
 
 plt.text(15.5, -0.8, r'$\tilde t$')
-plt.text(-2, 10, r'$f\left(\tilde t, \lambda \right)$')
+plt.text(-2, 10, r'$f^*\left(\tilde t, \lambda \right)$')
 
 plt.annotate('Max', xy=(10.1, f(10)+0.1), xytext=(11, f(10)+1),
             arrowprops=dict(facecolor='red', shrink=0.05),

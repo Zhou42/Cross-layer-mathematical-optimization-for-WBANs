@@ -8,8 +8,8 @@ f = [10, 20, 30, 40, 45, 50]
 
 plt.figure()
 plt.ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-plt.plot(f, energyDict['energyConsumption_proposed_decomposition'][0],  label="Proposed network with decomposition method",color="black", marker='+', linestyle="--", fillstyle='none')
-plt.plot(f, energyDict['energyConsumption_centralized'][0], label="Proposed network with centralized method",color="black", marker='s', linestyle=":", fillstyle='none')
+plt.plot(f, energyDict['energyConsumption_proposed_decomposition'][0],  label="Proposed network with decomposition solution",color="black", marker='+', linestyle="--", fillstyle='none')
+plt.plot(f, energyDict['energyConsumption_centralized'][0], label="Proposed network with centralized solution",color="black", marker='s', linestyle=":", fillstyle='none')
 # plt.plot(f, energyDict['energyConsumption_SingleHop'][0], label="Single-hop network",color="black", marker='x', linestyle="-.", fillstyle='none')
 plt.plot(f, energyDict['energyConsumption_Multihop_FixedRelayLocation'][0], label="Multi-hop with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
 plt.plot(f, energyDict['energyConsumption_Multihop_FixedPower'][0], label="Multi-hop with fixed transmission power",color="black", marker='d', linestyle="-", fillstyle='none')

@@ -30,7 +30,6 @@ T_frame = 0.4; % s
 W = 3e5; % Hz
 N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is W
 P_max = 10^(0/10) / 1000; % W
-% For test
 P_min = 10^(-15/10) / 1000;
 % P_min = 10^(-28/10) / 1000;n 
 
@@ -187,7 +186,7 @@ for i_leftarm_2 = i_leftarm_1+1:21
 % ===============================torso=====================================   
                     % for region torso with two relays
 %                     for i_torso_1 = 38:56  
-                    for i_torso_1 = 45:49
+                    for i_torso_1 = 54:56
                     for i_torso_2 = i_torso_1+1:57 
 
 %                     % for region torso with one relay
@@ -245,5 +244,5 @@ end
 end
 toc;
 % filename = ['11PotentialRelays_Primal_Results_40kbps_400ms_' num2str(length(relaySet_opt)) 'Relays.mat'];
-filename = ['11PotentialRelays_Primal_Results_40kbps_400ms_' num2str(relayNum) 'Relays_torso_1_45to49.mat'];
+filename = ['11PotentialRelays_Primal_Results_40kbps_400ms_' num2str(relayNum) 'Relays_torso_1_54to56.mat'];
 save(filename);
