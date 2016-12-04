@@ -35,41 +35,129 @@ P_max = 10^(0/10) / 1000; % W
 P_min = 10^(-15/10) / 1000;
 % P_min = 10^(-28/10) / 1000;n 
 % coordinator
-% im = imread('WBSNGraph.jpg');
+
+%% Position 1
+% im = imread('WBSNGraph-1.jpg');
 % imshow(im);
+% x_body = 1137:170:1650;
+% y_body = [897 1075 1259 1464 1681];
+% [x_grid, y_grid] = meshgrid(x_body, y_body);
+% 
+% X = [
+%  114 913;
+%  359 841;
+%  491 1007;  % left arm - region 1
+%  2607 914;
+%  2364 841;
+%  2176 1004;  % right arm - region 2
+%  1199 2057;
+%  1054 2245;
+%  1050 2561;  % left leg - region 3
+%  1575 2036;
+%  1724 2228;
+%  1728 2578;  % right leg - region 4
+%  1387 312;  % head - region 5
+%  1594 1010;
+%  1387 1170;
+%  1502 1383;
+%  1111 1561;  % torso - region 6
+%            % sensors
+%  [235:170:750]' 916*ones(4,1); % Relay CS: left arm - 4 nodes
+%  [1923:170:2440]' 916*ones(4,1); % Relay CS: right arm - 4 nodes
+%  1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
+%  1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
+%  
+%  1145 427;
+%  1643 427; % Relay CS: head - 2 nodes
+%  
+%  reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+%  1647 1592 % coordinator
+% ];
+
+%% Position 2
+% im = imread('WBSNGraph-2.jpg');
+% imshow(im);
+% 
+% x_body = 1137:170:1650;
+% y_body = [897 1075 1259 1464 1681];
+% [x_grid, y_grid] = meshgrid(x_body, y_body);
+% 
+% X = [
+%     822 1618;
+%     750 1374;
+%     914 1246; % left arm - region 1
+%     1950 1582;
+%     2030 1338;
+%     1858 1150;% right arm - region 2
+%     1199 2057;
+%     1054 2245;
+%     1050 2561;  % left leg - region 3
+%     1575 2036;
+%     1724 2228;
+%     1728 2578;  % right leg - region 4
+%     1387 312;  % head - region 5
+%     1594 1010;
+%     1387 1170;
+%     1502 1383;
+%     1111 1561;  % torso - region 6
+%            % sensors
+%     822 * ones(4,1) [1490:-170:975]'; % Relay CS: left arm - 4 nodes
+%     1950 * ones(4,1) [894:170:1450]'; % Relay CS: right arm - 4 nodes
+%     1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
+%     1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
+% 
+%     1145 427;
+%     1643 427; % Relay CS: head - 2 nodes
+% 
+%     reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+%     1647 1592 % coordinator
+% ];
+
+%% Position 3
+im = imread('WBSNGraph-3.jpg');
+imshow(im);
+
 x_body = 1137:170:1650;
 y_body = [897 1075 1259 1464 1681];
 [x_grid, y_grid] = meshgrid(x_body, y_body);
 
 X = [
- 114 913;
- 359 841;
- 491 1007;  % left arm - region 1
- 2607 914;
- 2364 841;
- 2176 1004;  % right arm - region 2
- 1199 2057;
- 1054 2245;
- 1050 2561;  % left leg - region 3
- 1575 2036;
- 1724 2228;
- 1728 2578;  % right leg - region 4
- 1387 312;  % head - region 5
- 1594 1010;
- 1387 1170;
- 1502 1383;
- 1111 1561;  % torso - region 6
+    822 1618;
+    750 1374;
+    914 1246;  % left arm - region 1
+    1950 1582;
+    2030 1338;
+    1858 1150; % right arm - region 2
+    1074 2050;
+    802 2234;
+    610 2558;  % left leg - region 3
+    1694 2026;
+    1958 2226;
+    2170 2566; % right leg - region 4
+    1387 312;  % head - region 5
+    1594 1010;
+    1387 1170;
+    1502 1383;
+    1111 1561;  % torso - region 6
            % sensors
- [235:170:750]' 916*ones(4,1); % Relay CS: left arm - 4 nodes
- [1923:170:2440]' 916*ones(4,1); % Relay CS: right arm - 4 nodes
- 1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
- 1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
- 
- 1145 427;
- 1643 427; % Relay CS: head - 2 nodes
- 
- reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
- 1647 1592 % coordinator
+    822 * ones(4,1) [1490:-170:975]'; % Relay CS: left arm - 4 nodes
+    1950 * ones(4,1) [894:170:1450]'; % Relay CS: right arm - 4 nodes
+    1046 1934;
+    942 2110;
+    838 2298;
+    714 2502;
+    594 2718; % Relay CS: left leg - 4 nodes
+    1706 1930;
+    1814 2110;
+    1918 2302;
+    2034 2498;
+    2158 2718; % Relay CS: right leg - 4 nodes
+    
+    1145 427;
+    1643 427; % Relay CS: head - 2 nodes
+
+    reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+    1647 1592 % coordinator
 ];
 
 %% Graph
@@ -79,9 +167,9 @@ X = [
 % % scatter(X(:,1),X(:,2));
 % % set(gca,'ydir','reverse','xaxislocation','top');
 % 
-% for i = 1:(S_num + R_num + 1)
-%     text(X(i,1) ,X(i,2),num2str(i));
-% end
+for i = 1:(S_num + R_num + 1)
+    text(X(i,1) ,X(i,2),num2str(i));
+end
 
 
 % distance matrix; the image is 1022*1045 pixels
@@ -114,7 +202,7 @@ alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
 % x_s = 50000 * ones(S_num,1) * 2.5; % bit/s - 100 kb seems to be proper for lambda to converge to a positive number
-x_s = 40000 * ones(S_num,1);
+x_s = 45000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num, S_num + R_num + 1).*P_max)/N(S_num + R_num + 1)); % bit/s
 
@@ -135,35 +223,6 @@ diff = 1;
 
 F = 1;
 
-
-%% research on the influence of the sensor number
-% One sensor removed: sensor 1 on left hand
-% Two sensor removed: sensor 1 and 4 on both hands
-% Three sensor removed: sensor 1, 4 and 7
-% Four sensor removed: sensor 1, 4, 7 and 10
-% Five sensor removed: sensor 1, 4, 7, 10 and 15
-% Six sensor removed: sensor 1, 4, 7, 10, 15 and 17
-% Seven sensor removed: sensor 1, 4, 7, 10, 15, 17 and 9
-% Eight sensor removed: sensor 1, 4, 7, 10, 15, 17, 9 and 12
-% Nine sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12 and 3
-% Ten sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3 and 16
-sensor_flag = ones(17,1);
-% one sensor removed
-sensor_flag(1) = 0;
-sensor_flag(4) = 0;
-sensor_flag(7) = 0;
-sensor_flag(10) = 0;
-sensor_flag(15) = 0;
-sensor_flag(17) = 0;
-sensor_flag(9) = 0;
-sensor_flag(12) = 0;
-sensor_flag(3) = 0;
-sensor_flag(16) = 0;
-% Eleven sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16 and 6
-sensor_flag(6) = 0;
-
-sensor_idx = find(sensor_flag == 1);
-
 tic;
 
 %% Step 1: Find the upper bound of lambda*
@@ -172,16 +231,16 @@ lambda = lambda_low + lambda_interval;
 
 % Obtain t_tilde to update \lambda
 % tic;
-[t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
+[t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch(lambda);
 % toc;
 
 % Check if lambda increase or decrease
-lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
+lambda_delta = sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
 while (lambda_delta > 0)
     lambda = lambda + lambda_interval;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
-    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
-    lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch(lambda);
+    lambda_delta = sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
 end
 lambda_up = lambda;
 
@@ -190,10 +249,10 @@ while abs(lambda_up - lambda_low) > threshold * F
     % Obtain t_tilde to update \lambda
     lambda_mid = (lambda_low + lambda_up)/2;
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda_mid);
-    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda_mid, sensor_flag);
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch(lambda_mid);
 
     % Check if lambda increase or decrease
-    lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
+    lambda_delta = sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
     if (lambda_delta > 0)
         lambda_low = lambda_mid;
     else 
@@ -209,8 +268,8 @@ lambda = (lambda_low + lambda_up)/2;
 while diff > threshold
     fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
     % Obtain t_tilde to update \lambda
-    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
-    lambda = lambda + theta * 0.001 * (sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch(lambda);
+    lambda = lambda + theta * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
     % lambda = lambda + 0.001 * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
     lambda = max(lambda, 0);
     buf(mod(lambda_epoch,buf_length) + 1) = lambda;
@@ -221,11 +280,9 @@ while diff > threshold
     end
     lambda_epoch = lambda_epoch + 1;
 end    
-
+    
 toc;
 
-
-save('BinarySearch_Results_40kbps_400ms_6sensors.mat');
 %% Graph
 % imshow(im);
 % 

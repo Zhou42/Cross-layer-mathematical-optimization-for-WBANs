@@ -121,6 +121,7 @@ r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num
 % Seven sensor removed: sensor 1, 4, 7, 10, 15, 17 and 9
 % Eight sensor removed: sensor 1, 4, 7, 10, 15, 17, 9 and 12
 % Nine sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12 and 3
+% Ten sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3 and 16
 sensor_flag = ones(17,1);
 % one sensor removed
 sensor_flag(1) = 0;
@@ -132,12 +133,27 @@ sensor_flag(17) = 0;
 sensor_flag(9) = 0;
 sensor_flag(12) = 0;
 sensor_flag(3) = 0;
+sensor_flag(16) = 0;
+% Eleven sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16 and 6
+sensor_flag(6) = 0;
+
+% Twelve sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16, 6 and 15
+sensor_flag(15) = 0;
+
+% Thirteen sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16, 6, 15
+% and 13
+sensor_flag(13) = 0;
+
+% Fourteen sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16, 6, 15
+% 13 and 11
+sensor_flag(11) = 0;
 
 sensor_idx = find(sensor_flag == 1);
 
 
 %% z is known, the problem is convex 
-relay_idx = [19 22 29 34 36 53];
+% relay_idx = [19 22 29 34 36 53]; % !NEED modification when removing the regions
+relay_idx = [19 22 29]; % HEAD region removed
 z = zeros(S_num + R_num, 1);
 z(relay_idx) = 1;
 
@@ -148,18 +164,17 @@ cvx_begin
         t_tilde + P_tilde(sensor_idx) + T_tilde(sensor_idx) <= log(T_frame * B(sensor_idx))
         sum(exp(T_tilde(sensor_idx))) + sum(exp(T_tilde(relay_idx))) <= T_frame
         % left arm
-%         T_tilde(1:3) + log(W * log_sci(1 + (alpha_inBody(1:3,19).*exp(P_tilde(1:3)))/N(19))) >= log(x_s(1:3))
         sensor_flag(1:3) .* (T_tilde(1:3) + log(W * log_sci((alpha_inBody(1:3,relay_idx(1)).*exp(P_tilde(1:3)))/N(relay_idx(1))))) >= sensor_flag(1:3) .* log(x_s(1:3) * T_frame)
         % right arm
         sensor_flag(4:6) .* (T_tilde(4:6) + log(W * log_sci((alpha_inBody(4:6,relay_idx(2)).*exp(P_tilde(4:6)))/N(relay_idx(2))))) >= sensor_flag(4:6) .* log(x_s(4:6) * T_frame)
         % left leg
         sensor_flag(7:9) .* (T_tilde(7:9) + log(W * log_sci((alpha_inBody(7:9,relay_idx(3)).*exp(P_tilde(7:9)))/N(relay_idx(3))))) >= sensor_flag(7:9) .* log(x_s(7:9) * T_frame)
         % right leg
-        sensor_flag(10:12) .* (T_tilde(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx(4)).*exp(P_tilde(10:12)))/N(relay_idx(4))))) >= sensor_flag(10:12) .* log(x_s(10:12) * T_frame)
+        % sensor_flag(10:12) .* (T_tilde(10:12) + log(W * log_sci((alpha_inBody(10:12,relay_idx(4)).*exp(P_tilde(10:12)))/N(relay_idx(4))))) >= sensor_flag(10:12) .* log(x_s(10:12) * T_frame)
         % head
-        sensor_flag(13) .* (T_tilde(13) + log(W * log_sci((alpha_inBody(13,relay_idx(5)).*exp(P_tilde(13)))/N(relay_idx(5))))) >= sensor_flag(13) .* log(x_s(13) * T_frame)
+        % sensor_flag(13) .* (T_tilde(13) + log(W * log_sci((alpha_inBody(13,relay_idx(5)).*exp(P_tilde(13)))/N(relay_idx(5))))) >= sensor_flag(13) .* log(x_s(13) * T_frame)
         % Torso
-        sensor_flag(14:17) .* (T_tilde(14:17) + log(W * log_sci((alpha_inBody(14:17,relay_idx(6)).*exp(P_tilde(14:17)))/N(relay_idx(6))))) >= sensor_flag(14:17) .* log(x_s(14:17) * T_frame)
+        % sensor_flag(14:17) .* (T_tilde(14:17) + log(W * log_sci((alpha_inBody(14:17,relay_idx(6)).*exp(P_tilde(14:17)))/N(relay_idx(6))))) >= sensor_flag(14:17) .* log(x_s(14:17) * T_frame)
         
         % Region 1
         log(r_relay(relay_idx(1)) * exp(T_tilde(relay_idx(1)))) >= log(sum(sensor_flag(1:3) .* x_s(1:3) * T_frame))
@@ -168,12 +183,14 @@ cvx_begin
         % Region 3
         log(r_relay(relay_idx(3)) * exp(T_tilde(relay_idx(3)))) >= log(sum(sensor_flag(7:9) .* x_s(7:9) * T_frame))
         % Region 4
-        log(r_relay(relay_idx(4)) * exp(T_tilde(relay_idx(4)))) >= log(sum(sensor_flag(10:12) .* x_s(10:12) * T_frame))
+        % log(r_relay(relay_idx(4)) * exp(T_tilde(relay_idx(4)))) >= log(sum(sensor_flag(10:12) .* x_s(10:12) * T_frame))
+        
         % Region 5
-        log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(sensor_flag(13) .* x_s(13) * T_frame))
+        % log(r_relay(relay_idx(5)) * exp(T_tilde(relay_idx(5)))) >= log(sum(sensor_flag(13) .* x_s(13) * T_frame))
+        
         % Region 6
-        log(r_relay(relay_idx(6)) * exp(T_tilde(relay_idx(6)))) >= log(sum(sensor_flag(14:17) .* x_s(14:17) * T_frame))
+        % log(r_relay(relay_idx(6)) * exp(T_tilde(relay_idx(6)))) >= log(sum(sensor_flag(14:17) .* x_s(14:17) * T_frame))
         
         log(P_min) <= P_tilde(sensor_idx) <= log(P_max)
 cvx_end
-save('FixedRelayLocation_Results_40kbps_400ms_8sensors.mat');
+save('FixedRelayLocation_Results_40kbps_400ms_3sensors.mat');

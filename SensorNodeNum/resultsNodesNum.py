@@ -32,6 +32,12 @@ data_FixedPower_14sensors = scio.loadmat('./FixedPower/relayLocationControlAndFi
 data_FixedPower_15sensors = scio.loadmat('./FixedPower/relayLocationControlAndFixedPower_Results_40kbps_400ms_15sensors.mat')
 data_FixedPower_16sensors = scio.loadmat('./FixedPower/relayLocationControlAndFixedPower_Results_40kbps_400ms_16sensors.mat')
 
+
+data_FixedRelayLocation_3sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_3sensors.mat')
+data_FixedRelayLocation_4sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_4sensors.mat')
+data_FixedRelayLocation_5sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_5sensors.mat')
+data_FixedRelayLocation_6sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_6sensors.mat')
+data_FixedRelayLocation_7sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_7sensors.mat')
 data_FixedRelayLocation_8sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_8sensors.mat')
 data_FixedRelayLocation_9sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_9sensors.mat')
 data_FixedRelayLocation_10sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_10sensors.mat')
@@ -43,7 +49,7 @@ data_FixedRelayLocation_15sensors = scio.loadmat('./FixedRelayLocation/FixedRela
 data_FixedRelayLocation_16sensors = scio.loadmat('./FixedRelayLocation/FixedRelayLocation_Results_40kbps_400ms_16sensors.mat')
 
 # Plot the lifetime against the number of sensors
-numOfSensors = range(8, 18, 1)
+numOfSensors = range(3, 18, 1)
 lifetime_BinarySearch = [
         data_BinarySearch_8sensors['t_tilde'][0][0],
         data_BinarySearch_9sensors['t_tilde'][0][0],
@@ -84,6 +90,12 @@ lifetime_FixedPower = [
         ]
 
 lifetime_FixedRelayLocation = [
+        data_FixedRelayLocation_3sensors['t_tilde'][0][0],
+        data_FixedRelayLocation_4sensors['t_tilde'][0][0],
+        data_FixedRelayLocation_5sensors['t_tilde'][0][0],
+        data_FixedRelayLocation_6sensors['t_tilde'][0][0],
+        data_FixedRelayLocation_7sensors['t_tilde'][0][0],
+
         data_FixedRelayLocation_8sensors['t_tilde'][0][0],
         data_FixedRelayLocation_9sensors['t_tilde'][0][0],
         data_FixedRelayLocation_10sensors['t_tilde'][0][0],
@@ -98,11 +110,11 @@ lifetime_FixedRelayLocation = [
 
 # plot the graph
 plt.figure()
-plt.semilogy(numOfSensors, np.exp(lifetime_BinarySearch), label="Proposed network with decomposition solution",color="black", marker='+', linestyle="--", fillstyle='none')
-plt.semilogy(numOfSensors, np.exp(lifetime_Centralized), label="Proposed network with centralized solution",color="black", marker='s', linestyle=":", fillstyle='none')
+# plt.semilogy(numOfSensors, np.exp(lifetime_BinarySearch), label="Proposed network with decomposition solution",color="black", marker='+', linestyle="--", fillstyle='none')
+# plt.semilogy(numOfSensors, np.exp(lifetime_Centralized), label="Proposed network with centralized solution",color="black", marker='s', linestyle=":", fillstyle='none')
 
-plt.semilogy(numOfSensors, np.exp(lifetime_FixedPower), label="Multi-hop with fixed relay location",color="black", marker='o', linestyle="-", fillstyle='none')
-plt.semilogy(numOfSensors, np.exp(lifetime_FixedRelayLocation), label="Multi-hop with fixed transmission power",color="black", marker='d', linestyle="-", fillstyle='none')
+# plt.semilogy(numOfSensors, np.exp(lifetime_FixedPower), label="Multi-hop with fixed transmission power",color="black", marker='o', linestyle="-", fillstyle='none')
+plt.semilogy(numOfSensors, np.exp(lifetime_FixedRelayLocation), label="Multi-hop with fixed relay location",color="black", marker='d', linestyle="-", fillstyle='none')
 
 plt.xlabel("Number of sensor nodes")
 plt.ylabel("Network lifetime/s")

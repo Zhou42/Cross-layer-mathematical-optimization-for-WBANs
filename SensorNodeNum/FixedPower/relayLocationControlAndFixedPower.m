@@ -129,6 +129,7 @@ r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num
 % Seven sensor removed: sensor 1, 4, 7, 10, 15, 17 and 9
 % Eight sensor removed: sensor 1, 4, 7, 10, 15, 17, 9 and 12
 % Nine sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12 and 3
+% Ten sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3 and 16
 sensor_flag = ones(17,1);
 % one sensor removed
 sensor_flag(1) = 0;
@@ -140,6 +141,10 @@ sensor_flag(17) = 0;
 sensor_flag(9) = 0;
 sensor_flag(12) = 0;
 sensor_flag(3) = 0;
+sensor_flag(16) = 0;
+% Eleven sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16 and 6
+sensor_flag(6) = 0;
+
 % sensor_idx = find(sensor_flag == 1);
 
 %% Exhaustive search for the optimal solution of the PRIMAL Problem
@@ -172,4 +177,4 @@ for i_1 = 18:21
 end
 toc
 
-save('relayLocationControlAndFixedPower_Results_40kbps_400ms_8sensors.mat');
+save('relayLocationControlAndFixedPower_Results_40kbps_400ms_6sensors.mat');

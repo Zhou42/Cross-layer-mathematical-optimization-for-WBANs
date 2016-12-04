@@ -1,8 +1,9 @@
-% 2016-05-23 by Yang Zhou
+% 2016-05-04 by Yang Zhou
 % [1] Energy Efficiency Optimziation by Resource Allocation in Wireless Body Area Networks
 % Description: 
 % [2] Channel Models for Medical Implant Communication. 
 % Channel model - Table 1: Deep tissue implant to body surface
+% [3] Channel and Error Modeling for Wireless Body Area Networks
 %
 % According to the simulation result from topology part, we can conclude  
 % there are 17 sensor nodes, 38 relay Candidate Sites and 1 coordinator
@@ -32,9 +33,8 @@ N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is 
 P_max = 10^(0/10) / 1000; % W
 % For test
 P_min = 10^(-15/10) / 1000;
-% P_min = 10^(-28/10) / 1000;
-
-% coordinate
+% P_min = 10^(-28/10) / 1000;n 
+% coordinator
 % im = imread('WBSNGraph.jpg');
 % imshow(im);
 x_body = 1137:170:1650;
@@ -79,7 +79,6 @@ X = [
 % % scatter(X(:,1),X(:,2));
 % % set(gca,'ydir','reverse','xaxislocation','top');
 % 
-
 % for i = 1:(S_num + R_num + 1)
 %     text(X(i,1) ,X(i,2),num2str(i));
 % end
@@ -119,6 +118,24 @@ x_s = 40000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num, S_num + R_num + 1).*P_max)/N(S_num + R_num + 1)); % bit/s
 
+
+%% Gradient 
+% lambda = 0.1;
+lambda_low = 0;
+lambda_interval = 0.2;
+% % t_tilde = 12.259086; 
+% % t_tilde = 12.269132; 
+% t_tilde = 12;
+lambda_epoch = 1;
+
+buf_length = 10;
+buf = zeros(buf_length,1);
+sum_old = 0;
+diff = 1;
+
+F = 1;
+
+
 %% research on the influence of the sensor number
 % One sensor removed: sensor 1 on left hand
 % Two sensor removed: sensor 1 and 4 on both hands
@@ -141,41 +158,79 @@ sensor_flag(17) = 0;
 sensor_flag(9) = 0;
 sensor_flag(12) = 0;
 sensor_flag(3) = 0;
-sensor_flag(16) = 0;
-% Eleven sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16 and 6
-sensor_flag(6) = 0;
+sensor_flag(3) = 0;
 
-% sensor_idx = find(sensor_flag == 1);
+sensor_idx = find(sensor_flag == 1);
 
-%% Exhaustive search for the optimal solution of the PRIMAL Problem
-t_tilde_opt = -inf;
-Round = 1;
-tic
-for i_1 = 18:21
-    for i_2 = 22:25
-        for i_3 = 26:30
-            for i_4 = 31:35
-                for i_5 = 36:37
-                    for i_6 = 38:57
-                        % z is known, the problem is convex 
-                        relay_idx = [i_1 i_2 i_3 i_4 i_5 i_6];
-                        z = zeros(S_num + R_num, 1);
-                        z(relay_idx) = 1;
-                        [t_tilde, P_tilde, T_tilde] = primalOptimalGivenZandSensorIdx(relay_idx, sensor_flag);   
-                        if t_tilde_opt < t_tilde
-                            t_tilde_opt = t_tilde;
-                            P_tilde_opt = P_tilde;
-                            T_tilde_opt = T_tilde;
-                            z_opt = z;
-                        end
-                        Round = Round + 1;
-                    end 
-                end
-            end
-        end
-    end
-    fprintf('Round %d/16000, the optimal t_tilde is %f\n', Round,t_tilde_opt);
+tic;
+
+%% Step 1: Find the upper bound of lambda*
+lambda = lambda_low + lambda_interval;
+% fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
+
+% Obtain t_tilde to update \lambda
+% tic;
+[t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
+% toc;
+
+% Check if lambda increase or decrease
+lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
+while (lambda_delta > 0)
+    lambda = lambda + lambda_interval;
+    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
+    lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
 end
-toc
+lambda_up = lambda;
 
-save('Primal_Results_40kbps_400ms_6sensors.mat');
+%% Step 2: obtain the lambda_up and lambda_low bound that are close enough
+while abs(lambda_up - lambda_low) > threshold * F
+    % Obtain t_tilde to update \lambda
+    lambda_mid = (lambda_low + lambda_up)/2;
+    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda_mid);
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda_mid, sensor_flag);
+
+    % Check if lambda increase or decrease
+    lambda_delta = sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame;
+    if (lambda_delta > 0)
+        lambda_low = lambda_mid;
+    else 
+        lambda_up = lambda_mid;
+    end
+   lambda_epoch = lambda_epoch + 1;
+end
+
+%% Step 3: Actually solve the optimal lambda*
+lambda = (lambda_low + lambda_up)/2;
+% Comment for speed
+
+while diff > threshold
+    fprintf('Lambda epoch %d, Lambda is %f\n',lambda_epoch, lambda);
+    % Obtain t_tilde to update \lambda
+    [t_tilde, z, T_tilde, P_tilde] = SecondaryMasterProblem_fStar_BinarySearch_NodesNum(lambda, sensor_flag);
+    lambda = lambda + theta * 0.001 * (sum(exp(T_tilde(sensor_idx))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    % lambda = lambda + 0.001 * (sum(exp(T_tilde(1:S_num))) + exp(T_tilde(1:(S_num+R_num))')*z - T_frame);
+    lambda = max(lambda, 0);
+    buf(mod(lambda_epoch,buf_length) + 1) = lambda;
+    %% Iteration ending criteria; calculate diff each (buf_length) iterations
+    if (mod(lambda_epoch, buf_length) == 1)
+        diff = abs(sum_old - sum(buf))/buf_length;
+        sum_old = sum(buf);
+    end
+    lambda_epoch = lambda_epoch + 1;
+end    
+
+toc;
+
+
+save('BinarySearch_Results_40kbps_400ms_8sensors.mat');
+%% Graph
+% imshow(im);
+% 
+% % hold on;
+% % scatter(X(:,1),X(:,2));
+% % set(gca,'ydir','reverse','xaxislocation','top');
+% 
+% for i = 1:(S_num + R_num + 1)
+%     text(X(i,1),X(i,2),num2str(i));
+% end

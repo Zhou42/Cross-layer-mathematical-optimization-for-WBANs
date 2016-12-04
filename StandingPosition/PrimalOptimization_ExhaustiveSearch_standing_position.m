@@ -32,44 +32,125 @@ N = (10^(-17.4)*W) * ones(S_num + R_num + 1,1) /1000; % -174dBm/Hz [1]; Unit is 
 P_max = 10^(0/10) / 1000; % W
 % For test
 P_min = 10^(-15/10) / 1000;
-% P_min = 10^(-28/10) / 1000;
+% P_min = 10^(-28/10) / 1000;n 
 
 % coordinate
 % im = imread('WBSNGraph.jpg');
 % imshow(im);
+%% Position 1
+% x_body = 1137:170:1650;
+% y_body = [897 1075 1259 1464 1681];
+% [x_grid, y_grid] = meshgrid(x_body, y_body);
+% 
+% X = [
+%  114 913;
+%  359 841;
+%  491 1007;  % left arm - region 1
+%  2607 914;
+%  2364 841;
+%  2176 1004;  % right arm - region 2
+%  1199 2057;
+%  1054 2245;
+%  1050 2561;  % left leg - region 3
+%  1575 2036;
+%  1724 2228;
+%  1728 2578;  % right leg - region 4
+%  1387 312;  % head - region 5
+%  1594 1010;
+%  1387 1170;
+%  1502 1383;
+%  1111 1561;  % torso - region 6
+%            % sensors
+%  [235:170:750]' 916*ones(4,1); % Relay CS: left arm - 4 nodes
+%  [1923:170:2440]' 916*ones(4,1); % Relay CS: right arm - 4 nodes
+%  1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
+%  1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
+%  
+%  1145 427;
+%  1643 427; % Relay CS: head - 2 nodes
+%  
+%  reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+%  1647 1592 % coordinator
+% ];
+
+%% Position 2
+% x_body = 1137:170:1650;
+% y_body = [897 1075 1259 1464 1681];
+% [x_grid, y_grid] = meshgrid(x_body, y_body);
+% 
+% X = [
+%     822 1618;
+%     750 1374;
+%     914 1246; % left arm - region 1
+%     1950 1582;
+%     2030 1338;
+%     1858 1150;% right arm - region 2
+%     1199 2057;
+%     1054 2245;
+%     1050 2561;  % left leg - region 3
+%     1575 2036;
+%     1724 2228;
+%     1728 2578;  % right leg - region 4
+%     1387 312;  % head - region 5
+%     1594 1010;
+%     1387 1170;
+%     1502 1383;
+%     1111 1561;  % torso - region 6
+%            % sensors
+%     822 * ones(4,1) [1490:-170:975]'; % Relay CS: left arm - 4 nodes
+%     1950 * ones(4,1) [894:170:1450]'; % Relay CS: right arm - 4 nodes
+%     1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
+%     1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
+% 
+%     1145 427;
+%     1643 427; % Relay CS: head - 2 nodes
+% 
+%     reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+%     1647 1592 % coordinator
+% ];
+
+%% Position 3
 x_body = 1137:170:1650;
 y_body = [897 1075 1259 1464 1681];
 [x_grid, y_grid] = meshgrid(x_body, y_body);
 
 X = [
- 114 913;
- 359 841;
- 491 1007;  % left arm - region 1
- 2607 914;
- 2364 841;
- 2176 1004;  % right arm - region 2
- 1199 2057;
- 1054 2245;
- 1050 2561;  % left leg - region 3
- 1575 2036;
- 1724 2228;
- 1728 2578;  % right leg - region 4
- 1387 312;  % head - region 5
- 1594 1010;
- 1387 1170;
- 1502 1383;
- 1111 1561;  % torso - region 6
+    822 1618;
+    750 1374;
+    914 1246;  % left arm - region 1
+    1950 1582;
+    2030 1338;
+    1858 1150; % right arm - region 2
+    1074 2050;
+    802 2234;
+    610 2558;  % left leg - region 3
+    1694 2026;
+    1958 2226;
+    2170 2566; % right leg - region 4
+    1387 312;  % head - region 5
+    1594 1010;
+    1387 1170;
+    1502 1383;
+    1111 1561;  % torso - region 6
            % sensors
- [235:170:750]' 916*ones(4,1); % Relay CS: left arm - 4 nodes
- [1923:170:2440]' 916*ones(4,1); % Relay CS: right arm - 4 nodes
- 1120*ones(5,1) [1934:190:2740]'; % Relay CS: left leg - 4 nodes
- 1642*ones(5,1) [1934:190:2740]'; % Relay CS: right leg - 4 nodes
- 
- 1145 427;
- 1643 427; % Relay CS: head - 2 nodes
- 
- reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
- 1647 1592 % coordinator
+    822 * ones(4,1) [1490:-170:975]'; % Relay CS: left arm - 4 nodes
+    1950 * ones(4,1) [894:170:1450]'; % Relay CS: right arm - 4 nodes
+    1046 1934;
+    942 2110;
+    838 2298;
+    714 2502;
+    594 2718; % Relay CS: left leg - 4 nodes
+    1706 1930;
+    1814 2110;
+    1918 2302;
+    2034 2498;
+    2158 2718; % Relay CS: right leg - 4 nodes
+    
+    1145 427;
+    1643 427; % Relay CS: head - 2 nodes
+
+    reshape(x_grid,[20 1]) reshape(y_grid,[20 1]); % Relay CS: torso - 20 nodes
+    1647 1592 % coordinator
 ];
 
 %% Graph
@@ -115,37 +196,9 @@ alpha_onBody = 10.^( - PL_onBody./10);
 
 % x_s - 50kbps for each node
 % x_s = 50000 * ones(S_num,1) * 2.5; % bit/s - 100 kb seems to be proper for lambda to converge to a positive number
-x_s = 40000 * ones(S_num,1);
+x_s = 30000 * ones(S_num,1);
 % data rate of relay to coordinator
 r_relay(S_num + 1:S_num + R_num) = W * log_sci(1 + (alpha_onBody(S_num + 1:S_num + R_num, S_num + R_num + 1).*P_max)/N(S_num + R_num + 1)); % bit/s
-
-%% research on the influence of the sensor number
-% One sensor removed: sensor 1 on left hand
-% Two sensor removed: sensor 1 and 4 on both hands
-% Three sensor removed: sensor 1, 4 and 7
-% Four sensor removed: sensor 1, 4, 7 and 10
-% Five sensor removed: sensor 1, 4, 7, 10 and 15
-% Six sensor removed: sensor 1, 4, 7, 10, 15 and 17
-% Seven sensor removed: sensor 1, 4, 7, 10, 15, 17 and 9
-% Eight sensor removed: sensor 1, 4, 7, 10, 15, 17, 9 and 12
-% Nine sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12 and 3
-% Ten sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3 and 16
-sensor_flag = ones(17,1);
-% one sensor removed
-sensor_flag(1) = 0;
-sensor_flag(4) = 0;
-sensor_flag(7) = 0;
-sensor_flag(10) = 0;
-sensor_flag(15) = 0;
-sensor_flag(17) = 0;
-sensor_flag(9) = 0;
-sensor_flag(12) = 0;
-sensor_flag(3) = 0;
-sensor_flag(16) = 0;
-% Eleven sensor removed: sensor 1, 4, 7, 10, 15, 17, 9, 12, 3, 16 and 6
-sensor_flag(6) = 0;
-
-% sensor_idx = find(sensor_flag == 1);
 
 %% Exhaustive search for the optimal solution of the PRIMAL Problem
 t_tilde_opt = -inf;
@@ -157,25 +210,27 @@ for i_1 = 18:21
             for i_4 = 31:35
                 for i_5 = 36:37
                     for i_6 = 38:57
+                        tic
                         % z is known, the problem is convex 
                         relay_idx = [i_1 i_2 i_3 i_4 i_5 i_6];
                         z = zeros(S_num + R_num, 1);
                         z(relay_idx) = 1;
-                        [t_tilde, P_tilde, T_tilde] = primalOptimalGivenZandSensorIdx(relay_idx, sensor_flag);   
+                        [t_tilde, P_tilde, T_tilde] = primalOptimalGivenZ(relay_idx);   
                         if t_tilde_opt < t_tilde
                             t_tilde_opt = t_tilde;
                             P_tilde_opt = P_tilde;
                             T_tilde_opt = T_tilde;
                             z_opt = z;
                         end
+                        fprintf('Round %d/16000, the optimal t_tilde is %f\n', Round,t_tilde_opt);
                         Round = Round + 1;
+                        toc;
                     end 
                 end
             end
         end
     end
-    fprintf('Round %d/16000, the optimal t_tilde is %f\n', Round,t_tilde_opt);
 end
 toc
 
-save('Primal_Results_40kbps_400ms_6sensors.mat');
+save('Primal_Results_30kbps_400ms_position-3.mat');
